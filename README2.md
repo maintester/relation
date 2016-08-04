@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # web-spring-java-simple
 A simple Spring app
 
@@ -23,3 +24,7 @@ FROM [codenvy/debian_jdk8](https://hub.docker.com/r/codenvy/debian_jdk8/)
 | 3 | Stop Tomcat      |    `$TOMCAT_HOME/bin/catalina.sh stop` |
 | 4 | Tomcat Debug Mode      |    `$TOMCAT_HOME/bin/catalina.sh jpda run` |
 
+=======
+# relation
+Collection Realations of perople via Webpages
+>>>>>>> 75ac1e8a040f846794e2c7811aa066586358e8f8
