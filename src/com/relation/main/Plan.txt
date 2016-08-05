@@ -1,0 +1,6 @@
+Schritt 1 Suchen nach Suchebegriffen, Ergebnisliste speichern  
+Schritt 2 Ergebnisliste laden, je site ein download machen
+Schritt 3 Analyse der Seiten nach Personen, 
+Schritt 3 Verlinkung der Personen die sich auf der gleichen Seite befinden.
+Schritt 4 Display Results
+Schritt 5 ....
