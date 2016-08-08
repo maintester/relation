@@ -1,0 +1,43 @@
+mysql --user=root --password=casio1
+
+use realtion1;
+drop table version ;
+drop table person ;
+drop table  personinfo ;
+drop table  relation;
+drop table  location ;
+
+create table dbversion( version int);
+
+create table person(
+    personid varchar(40) NOT NULL ,
+    lastname VARCHAR(40) NOT NULL,
+    midname VARCHAR(40) ,
+    firstname VARCHAR(40) NOT NULL,
+   PRIMARY KEY ( personid )
+);
+create table personinfo(
+    infoid  INT NOT NULL AUTO_INCREMENT,
+    infotype VARCHAR(10) NOT NULL,
+    infovalue VARCHAR(100) NOT NULL,
+    personid INT,
+   PRIMARY KEY ( infoid )
+);
+
+create table relation(
+    relationid varchar(40),
+    personId1 varchar(40) NOT NULL,
+    personId2 varchar(40) NOT NULL,
+    strenght INT NOT NULL,
+   PRIMARY KEY ( relationid )
+);
+create table location(
+    locationid varchar(40),
+    relationid varchar(40),
+    location VARCHAR(200) NOT NULL,
+   PRIMARY KEY ( locationid )
+);
+COMMIT;
+grant all on relation1.* to 'user1'@'localhost' identified by 'user1';
+insert into version(1);
+COMMIT;

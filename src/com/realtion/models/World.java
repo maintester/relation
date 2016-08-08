@@ -12,13 +12,13 @@ public class World implements Serializable{
 	private static final long serialVersionUID = 5909537819929325062L;
 
 	private HashMap <Integer, Person>persons ;
-	private ArrayList < Realtion>relations ;
+	private ArrayList < Relation>relations ;
 	private DocumentsList docs ;
 	
 	public void init() {
 		docs = new DocumentsList();
 		persons = new HashMap<Integer, Person>();
-		relations = new ArrayList<Realtion>();
+		relations = new ArrayList<Relation>();
 		
 		
 	}
