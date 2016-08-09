@@ -13,6 +13,7 @@ public class NameFinder {
 	 */
 	public static void main(String[] args) {
 	 try {
+		 System.out.println("hello");
 		new NameFinder().findName();
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
