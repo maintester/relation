@@ -2,9 +2,12 @@ package com.relation.util;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.DriverManager;
@@ -30,15 +33,26 @@ public class Persistance {
 		Person o = new Person();
 		o.firstName = "a";
 		o.lastName = "b";
-		String id = new Persistance().savePerson(o);
+		String id = new Persistance().insertPerson(o);
 		o.firstName = "c";
 		o.lastName = "b";
-		String id2 = new Persistance().savePerson(o);
+		String id2 = new Persistance().insertPerson(o);
 		Relation r = new Relation (id,id2,"test.txt");
-		String rid = new Persistance().saveRelation(r);
+		String rid = new Persistance().insertRelation(r);
 	}
 
-	public String savePerson(Person o) {
+	
+	public String read(String filename){
+	try {
+		return new String(Files.readAllBytes(Paths.get(filename)));
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return "";
+	}
+	}
+	
+	public String insertPerson(Person o) {
 		String sql = "insert into person(personid, lastname, midname, firstname ) values ( 'idx', 'X1' , 'X2', 'X3' )";
 		sql = sql.replace("X1", o.lastName);
 		sql = sql.replace("X2", o.midName);
@@ -53,7 +67,7 @@ public class Persistance {
 		return idx;
 	}
 
-	public String saveRelation(Relation o) {
+	public String insertRelation(Relation o) {
 		String sql = "insert into relation(relationid, personid1, personid2, strenght) values ( 'idx', 'X1' , 'X2', X3 )";
 		sql = sql.replace("X1", o.personId1);
 		sql = sql.replace("X2", o.personId2);

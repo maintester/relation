@@ -29,4 +29,10 @@ public class Step3 implements IStep {
 	 
 		return;
 	}
+
+	@Override
+	public void setParams(String paramName, String paramValue) {
+		// TODO Auto-generated method stub
+		
+	}
 }

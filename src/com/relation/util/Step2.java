@@ -53,4 +53,10 @@ public class Step2 implements IStep {
 		new Persistance().saveObject(si);
 		return;
 	}
+
+	@Override
+	public void setParams(String paramName, String paramValue) {
+		// TODO Auto-generated method stub
+		
+	}
 }
