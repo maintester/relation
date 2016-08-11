@@ -23,10 +23,10 @@ public class Starter {
 	 */
 	public static void main(String[] args) {
 
-		IStep s1 = new Step1();
-		s1.setParams("search", "");
-		s1.doStep();
-		 //new Step1().doStep();
+//		IStep s1 = new Step1();
+//		s1.setParams("search", "");
+//		s1.doStep();
+
 		 new Step2().doStep();
 		// new Step3().doStep();
 		

@@ -27,16 +27,39 @@ import org.jsoup.nodes.Element;
 public class MySpider {
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
 	private static final int MAX_PAGES_TO_SEARCH = 20;
+	private static final String PDF_Name = "convert.pdf";
 	private Set<String> pagesVisited = new HashSet<String>();
 
-	private HashMap<String, String> htmlDocuments = new HashMap<String, String>();
+	public  HashMap<String, String> htmlDocuments = new HashMap<String, String>();
+	public HashMap<String, String> urlsMap = new HashMap<String, String>();
+	
+	private List<String> pagesToVisit = new LinkedList<String>();
 
-	public List<String> search(String url) {
-		List<String> pagesToVisit = new LinkedList<String>();
-		if(url.indexOf("http")== -1){
-			url = "http://" + url;
+	public void searchSite(String baseurl) {
+		if (baseurl.indexOf("http") == -1) {
+			baseurl = "http://" + baseurl;
 		}
-		System.out.println("Hole " + url);
+		pagesToVisit.add(baseurl);
+		pagesVisited.add(baseurl);
+		while (pagesToVisit.size() > 0) {
+			if (pagesToVisit.get(0).contains(baseurl)) {
+				searchOneUrl(pagesToVisit.get(0));
+				pagesVisited.add(pagesToVisit.get(0));
+			}
+			pagesToVisit.remove(0);
+			// System.out.println("size " +pagesToVisit.size());
+		}
+		for( String s :htmlDocuments.keySet()){
+			System.out.println(htmlDocuments.get(s));
+		}
+	}
+
+	public void searchOneUrl(String url) {
+		String urlHash = Persistance.generateMD5(url);
+		urlsMap.put(urlHash, url);
+
+		//System.out.println("Hole " + url);
+
 		Connection connection = Jsoup.connect(url).timeout(6000).userAgent(USER_AGENT);
 		Document htmlDocument = null;
 		String contentType = "";
@@ -45,41 +68,52 @@ public class MySpider {
 				htmlDocument = connection.get();
 				contentType = connection.response().contentType();
 			} catch (UnsupportedMimeTypeException e1) {
-				// e1.printStackTrace();
-				String type = e1.getMimeType();
-				// type = type.substring(type.indexOf("Mimetype="));
-				// type = type.substring(0,type.indexOf(","));
-				contentType = type;
+				contentType = e1.getMimeType();
 			}
 
-			System.out.println(contentType);
+			// System.out.println(contentType);
 
 			if (contentType.contains("text/html")) {
 				htmlDocument = connection.get();
-				htmlDocuments.put(url, htmlDocument.text());
+				// htmlDocuments.put(urlHash, htmlDocument.text());
+				// System.out.println("testDerSeite: " +htmlDocument.text());
 				Elements links = htmlDocument.select("a[href]");
 				Elements media = htmlDocument.select("[src]");
 				for (Element e : links) {
-					pagesToVisit.add(e.absUrl("href"));
-					//System.out.println("urls " + e.html() + " " + e.absUrl("href"));
+					// urls.put( Persistance.generateMD5(e.absUrl("href")),
+					// e.absUrl("href"));
+					String newUrl = e.absUrl("href");
+					if (!pagesVisited.contains(newUrl) && pagesToVisit.indexOf(newUrl) < 0) {
+						System.out.println("neue url :" +newUrl ) ;
+						pagesToVisit.add(newUrl);
+					}
+					// System.out.println("urls:text: " + e.html() + " :Inhalt:"
+					// + e.absUrl("href"));
 				}
+				htmlDocuments.put(urlHash, htmlDocument.text());
+				return;
 			}
 
 			if (contentType.contains("application/pdf")) {
-				MySpider.download(url, "");
-				File input = new File("a.pdf");
+				MySpider.downloadPdf(url, "");
+				File input = new File(MySpider.PDF_Name);
 				PDDocument pd;
 				pd = PDDocument.load(input);
+				input = null;
 				PDFTextStripper stripper = new PDFTextStripper();
 				String result = stripper.getText(pd);
-				htmlDocuments.put(url, result);
+				// htmlDocuments.put(urlHash, result);
 				System.out.println(result);
+				htmlDocuments.put(urlHash, result);
+				return;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return pagesToVisit;
+		return;
 	}
+
+	// **********************************************************
 
 	// **********************************************************
 	private static String getMimeType(String fileName) {
@@ -95,22 +129,18 @@ public class MySpider {
 	}
 
 	// **********************************************************
-	public static Path download(String sourceUrl, String targetDirectory) throws MalformedURLException, IOException {
+	public static Path downloadPdf(String sourceUrl, String targetDirectory) throws MalformedURLException, IOException {
 		URL url = new URL(sourceUrl);
-
 		String fileName = url.getFile();
-		fileName = "a.pdf";
-
+		fileName = MySpider.PDF_Name;
 		Path targetPath = new File(targetDirectory + fileName).toPath();
-
 		Files.copy(url.openStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-
 		return targetPath;
 	}
 
 	// ***********************************************************
-	public HashMap<String, String> getHtmlDocuments() {
-		return htmlDocuments;
-	}
+	// public HashMap<String, String> getHtmlDocuments() {
+	// return htmlDocuments;
+	// }
 	// ***********************************************************
 }
