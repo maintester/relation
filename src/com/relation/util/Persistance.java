@@ -30,15 +30,15 @@ public class Persistance {
 	private String saveDir = "saveobjects/";
 
 	public static void main(String[] args) {
-		Person o = new Person();
+		Person o = new Person("a","","c");
 		o.firstName = "a";
 		o.lastName = "b";
-		String id = new Persistance().insertPerson(o);
-		o.firstName = "c";
-		o.lastName = "b";
-		String id2 = new Persistance().insertPerson(o);
-		Relation r = new Relation (id,id2,"test.txt");
-		String rid = new Persistance().insertRelation(r);
+//		String id = new Persistance().insertPerson(o);
+//		o.firstName = "c";
+//		o.lastName = "b";
+//		String id2 = new Persistance().insertPerson(o);
+//		Relation r = new Relation (id,id2,"test.txt");
+//		String rid = new Persistance().insertRelation(r);
 	}
 
 	

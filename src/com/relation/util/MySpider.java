@@ -35,6 +35,7 @@ public class MySpider {
 	
 	private List<String> pagesToVisit = new LinkedList<String>();
 
+	// ************************************************************************
 	public void searchSite(String baseurl) {
 		if (baseurl.indexOf("http") == -1) {
 			baseurl = "http://" + baseurl;
@@ -43,18 +44,16 @@ public class MySpider {
 		pagesVisited.add(baseurl);
 		while (pagesToVisit.size() > 0) {
 			if (pagesToVisit.get(0).contains(baseurl)) {
-				searchOneUrl(pagesToVisit.get(0));
+				searchOneUrl(baseurl ,pagesToVisit.get(0));
 				pagesVisited.add(pagesToVisit.get(0));
 			}
 			pagesToVisit.remove(0);
 			// System.out.println("size " +pagesToVisit.size());
 		}
-		for( String s :htmlDocuments.keySet()){
-			System.out.println(htmlDocuments.get(s));
-		}
+		
 	}
-
-	public void searchOneUrl(String url) {
+	// ************************************************************************
+	public void searchOneUrl(String baseUrl ,String url) {
 		String urlHash = Persistance.generateMD5(url);
 		urlsMap.put(urlHash, url);
 
@@ -83,8 +82,19 @@ public class MySpider {
 					// urls.put( Persistance.generateMD5(e.absUrl("href")),
 					// e.absUrl("href"));
 					String newUrl = e.absUrl("href");
-					if (!pagesVisited.contains(newUrl) && pagesToVisit.indexOf(newUrl) < 0) {
+					if(newUrl.contains("#")){
+						newUrl = newUrl.substring(0,newUrl.indexOf("#"));
+					}
+					if(newUrl.contains(".jpg")|| newUrl.contains(".png")|| newUrl.contains(".jpeg") ){
+						newUrl = "";
+					}
+					if(newUrl.indexOf(baseUrl)<0){
+						newUrl = "";
+					}
+					
+					if (newUrl.length()>1 && !pagesVisited.contains(newUrl) && pagesToVisit.indexOf(newUrl) < 0) {
 						System.out.println("neue url :" +newUrl ) ;
+						
 						pagesToVisit.add(newUrl);
 					}
 					// System.out.println("urls:text: " + e.html() + " :Inhalt:"
@@ -103,7 +113,7 @@ public class MySpider {
 				PDFTextStripper stripper = new PDFTextStripper();
 				String result = stripper.getText(pd);
 				// htmlDocuments.put(urlHash, result);
-				System.out.println(result);
+				//System.out.println(result);
 				htmlDocuments.put(urlHash, result);
 				return;
 			}

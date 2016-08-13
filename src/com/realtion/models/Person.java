@@ -2,6 +2,8 @@ package com.realtion.models;
 
 import java.io.Serializable;
 
+import com.relation.util.Persistance;
+
 public class Person implements Serializable{
 
 	
@@ -10,13 +12,15 @@ public class Person implements Serializable{
 	 */
 	private static final long serialVersionUID = 1526213871307882295L;
 	
-	public Integer personId = 0;
+	public String personId = "";
 	public String lastName= ""; 
 	public String midName= "";
 	public String firstName= "";
-	public String idHash="";
-	private Infos infos= null;
-	
-	
 
+	public Person(String firstName, String midName, String lastName){
+		this.firstName = firstName;
+		this.midName = midName;
+		this.lastName = lastName;
+		this.personId= Persistance.generateMD5(firstName+"*"+midName+"*"+lastName);
+	}
 }
