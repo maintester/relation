@@ -14,7 +14,7 @@ public class Step1 implements IStep {
 	private HashMap<String, String> params = new HashMap<String, String>();
 
 	@Override
-	public void doStep() {
+	public void doStep() { 
 		if(!params.containsKey("search")){return;}
 		GoogleQuery query = new GoogleQuery();
 		Set<String> sUrls = query.getDataFromGoogle(params.get("search"));

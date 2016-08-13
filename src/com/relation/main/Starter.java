@@ -27,8 +27,8 @@ public class Starter {
 //		s1.setParams("search", "");
 //		s1.doStep();
 
-		 new Step2().doStep();
-		// new Step3().doStep();
+		// new Step2().doStep();
+		 new Step3().doStep();
 		
 //		World myworld = new World();
 //		myworld = (World) new Persistance().loadObject("" + myworld.getClass().getSimpleName());
