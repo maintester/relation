@@ -1,4 +1,4 @@
-package com.relation.util;
+package com.relation.Steps;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,7 +7,10 @@ import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Set;
 
-import com.realtion.models.GoogleResults;
+import com.relation.models.GoogleResults;
+import com.relation.util.FileUtils;
+import com.relation.util.GoogleQuery;
+import com.relation.util.IStep;
 
 public class Step1 implements IStep {
 
@@ -24,8 +27,8 @@ public class Step1 implements IStep {
 		System.out.println("---------------");
 		for (String s : gr.newUrls) {
 			try {
-				s+="\r\n";
-			    Files.write(Paths.get("textfiles/gr.txt"), s.getBytes(),  StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+				s= s + FileUtils.getItemDelim() + params.get("search") +  FileUtils.getLineDelim();
+			    Files.write(Paths.get("textfiles/gr.txt"), s.getBytes() ,  StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			}catch (IOException e) {
 			    //exception handling left as an exercise for the reader
 			}

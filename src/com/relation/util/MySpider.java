@@ -6,7 +6,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -30,9 +32,9 @@ public class MySpider {
 	private static final String PDF_Name = "convert.pdf";
 	private Set<String> pagesVisited = new HashSet<String>();
 
-	public  HashMap<String, String> htmlDocuments = new HashMap<String, String>();
+	public HashMap<String, String> htmlDocuments = new HashMap<String, String>();
 	public HashMap<String, String> urlsMap = new HashMap<String, String>();
-	
+
 	private List<String> pagesToVisit = new LinkedList<String>();
 
 	// ************************************************************************
@@ -44,20 +46,22 @@ public class MySpider {
 		pagesVisited.add(baseurl);
 		while (pagesToVisit.size() > 0) {
 			if (pagesToVisit.get(0).contains(baseurl)) {
-				searchOneUrl(baseurl ,pagesToVisit.get(0));
+				System.out.println("call searchurl" +pagesToVisit.get(0));
+				searchOneUrl(baseurl, pagesToVisit.get(0));
 				pagesVisited.add(pagesToVisit.get(0));
 			}
 			pagesToVisit.remove(0);
-			// System.out.println("size " +pagesToVisit.size());
+			System.out.println("size " +pagesToVisit.size());
 		}
-		
+
 	}
+
 	// ************************************************************************
-	public void searchOneUrl(String baseUrl ,String url) {
+	public void searchOneUrl(String baseUrl, String url) {
 		String urlHash = Persistance.generateMD5(url);
 		urlsMap.put(urlHash, url);
 
-		//System.out.println("Hole " + url);
+		// System.out.println("Hole " + url);
 
 		Connection connection = Jsoup.connect(url).timeout(6000).userAgent(USER_AGENT);
 		Document htmlDocument = null;
@@ -82,40 +86,66 @@ public class MySpider {
 					// urls.put( Persistance.generateMD5(e.absUrl("href")),
 					// e.absUrl("href"));
 					String newUrl = e.absUrl("href");
-					if(newUrl.contains("#")){
-						newUrl = newUrl.substring(0,newUrl.indexOf("#"));
+					if (newUrl.contains("#")) {
+						newUrl = newUrl.substring(0, newUrl.indexOf("#"));
 					}
-					if(newUrl.contains(".jpg")|| newUrl.contains(".png")|| newUrl.contains(".jpeg") ){
+					if (newUrl.contains(".jpg") || newUrl.contains(".png") || newUrl.contains(".jpeg")) {
 						newUrl = "";
 					}
-					if(newUrl.indexOf(baseUrl)<0){
+					if (newUrl.indexOf(baseUrl) < 0) {
 						newUrl = "";
 					}
-					
-					if (newUrl.length()>1 && !pagesVisited.contains(newUrl) && pagesToVisit.indexOf(newUrl) < 0) {
-						System.out.println("neue url :" +newUrl ) ;
-						
+
+					if (newUrl.length() > 1 && !pagesVisited.contains(newUrl) && pagesToVisit.indexOf(newUrl) < 0) {
+						// System.out.println("neue url :" +newUrl ) ;
+						//if(pagesToVisit.size()< 10){
 						pagesToVisit.add(newUrl);
+						//}
 					}
 					// System.out.println("urls:text: " + e.html() + " :Inhalt:"
 					// + e.absUrl("href"));
 				}
 				htmlDocuments.put(urlHash, htmlDocument.text());
+				String result = htmlDocument.text();
+				result = result.replaceAll("\r", "");
+				result = result.replaceAll("\n", "");
+				result = result.replaceAll("\\|", "");
+				String sp = "" + FileUtils.getTStamp() + FileUtils.getItemDelim() + urlHash + FileUtils.getItemDelim()
+						+ result+ FileUtils.getLineDelim();
+				Files.write(Paths.get(FileUtils.getPathTextFiles()+"urlcontent.txt"), sp.getBytes(), StandardOpenOption.CREATE,
+						StandardOpenOption.APPEND);
 				return;
 			}
 
 			if (contentType.contains("application/pdf")) {
 				MySpider.downloadPdf(url, "");
+				System.out.println("downloading PDF" + url);
 				File input = new File(MySpider.PDF_Name);
+				
 				PDDocument pd;
-				pd = PDDocument.load(input);
-				input = null;
-				PDFTextStripper stripper = new PDFTextStripper();
-				String result = stripper.getText(pd);
-				// htmlDocuments.put(urlHash, result);
-				//System.out.println(result);
-				htmlDocuments.put(urlHash, result);
-				return;
+				try {
+					pd = PDDocument.load(input);
+					input = null;
+					PDFTextStripper stripper = new PDFTextStripper();
+					String result = stripper.getText(pd);
+					result = result.replaceAll("\r", "");
+					result = result.replaceAll("\n", "");
+					result = result.replaceAll("\\|", "");
+					// htmlDocuments.put(urlHash, result);
+					// System.out.println(result);
+					htmlDocuments.put(urlHash, result);
+
+					String sp = "" + FileUtils.getTStamp() + FileUtils.getItemDelim() + urlHash + FileUtils.getItemDelim()
+							+ result + FileUtils.getLineDelim();
+					Files.write(Paths.get(FileUtils.getPathTextFiles()+"urlcontent.txt"), sp.getBytes(), StandardOpenOption.CREATE,
+							StandardOpenOption.APPEND);
+				} catch (Exception e) {
+					input = null;
+					new File(MySpider.PDF_Name).delete();
+					// TODO Auto-generated catch block
+					e.printStackTrace(); 
+				}
+				//return;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

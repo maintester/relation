@@ -1,4 +1,4 @@
-package com.realtion.models;
+package com.relation.models;
 
 import java.io.Serializable;
 import java.util.HashMap;

@@ -15,8 +15,8 @@ import java.util.Date;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
-import com.realtion.models.Person;
-import com.realtion.models.Relation;
+import com.relation.models.Person;
+import com.relation.models.Relation;
 
 /**
  * Read and Write Objects
@@ -68,20 +68,21 @@ public class Persistance {
 	}
 
 	public String insertRelation(Relation o) {
-		String sql = "insert into relation(relationid, personid1, personid2, strenght) values ( 'idx', 'X1' , 'X2', X3 )";
-		sql = sql.replace("X1", o.personId1);
-		sql = sql.replace("X2", o.personId2);
-		sql = sql.replace("X3", ""+o.strenght);
-		
-		String complete = o.personId1 + o.personId2 ;
-		String idx = this.generateMD5(complete);
-		sql = sql.replace("idx", "" + idx);
-		
-		boolean bSuccess = doStatement(sql);
-		if (!bSuccess) {
-			return "0";
-		}
-		return idx;
+//		String sql = "insert into relation(relationid, personid1, personid2, strenght) values ( 'idx', 'X1' , 'X2', X3 )";
+//		sql = sql.replace("X1", o.personId1);
+//		sql = sql.replace("X2", o.personId2);
+//		sql = sql.replace("X3", ""+o.strenght);
+//		
+//		String complete = o.personId1 + o.personId2 ;
+//		String idx = this.generateMD5(complete);
+//		sql = sql.replace("idx", "" + idx);
+//		
+//		boolean bSuccess = doStatement(sql);
+//		if (!bSuccess) {
+//			return "0";
+//		}
+//		return idx;
+		return "";
 	}
 
 	public boolean doStatement(String statement) {

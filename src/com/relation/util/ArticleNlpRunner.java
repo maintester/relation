@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.Test;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class ArticleNlpRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(ArticleNlpRunner.class);
 
-  @Test 
+   
   public void basic() {
     LOG.debug("Starting Stanford NLP");
 

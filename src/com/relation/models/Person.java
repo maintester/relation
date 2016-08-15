@@ -1,4 +1,4 @@
-package com.realtion.models;
+package com.relation.models;
 
 import java.io.Serializable;
 
@@ -23,4 +23,5 @@ public class Person implements Serializable{
 		this.lastName = lastName;
 		this.personId= Persistance.generateMD5(firstName+"*"+midName+"*"+lastName);
 	}
+	
 }

@@ -1,4 +1,4 @@
-package com.relation.util;
+package com.relation.Steps;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -12,15 +12,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.realtion.models.GoogleResults;
-import com.realtion.models.Pages;
-import com.realtion.models.Sites;
+import com.relation.models.GoogleResults;
+import com.relation.models.Pages;
+import com.relation.models.Sites;
+import com.relation.util.FileUtils;
+import com.relation.util.IStep;
 
 public class Step3 implements IStep {
 
 	@Override
 	public void doStep() {
 		Set<String> names = new HashSet<String>();
+
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(FileUtils.getPathNameFiles() + "firstname.txt"));
 			for (String line; (line = br.readLine()) != null;) {
@@ -35,14 +38,12 @@ public class Step3 implements IStep {
 					names.add(line);
 				}
 			}
-			Files.write(Paths.get(FileUtils.getPathNameFiles() + "uniquforname.txt"), "".getBytes(),
-					StandardOpenOption.CREATE);
+			Files.deleteIfExists(Paths.get(FileUtils.getPathNameFiles() + "firstname_unique.txt"));
 			for (String sname : names) {
 				sname += FileUtils.getLineDelim();
-				Files.write(Paths.get(FileUtils.getPathNameFiles() + "uniqueforname.txt"), sname.getBytes(),
+				Files.write(Paths.get(FileUtils.getPathNameFiles() + "firstname_unique.txt"), sname.getBytes(),
 						StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			}
-			// line is not visible here.
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

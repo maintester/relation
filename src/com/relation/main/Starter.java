@@ -5,16 +5,18 @@ import java.util.Set;
 
 import org.jsoup.nodes.Document;
 
-import com.realtion.models.GoogleResults;
-import com.realtion.models.World;
+import com.relation.Steps.Step1;
+import com.relation.Steps.Step2;
+import com.relation.Steps.Step3;
+import com.relation.Steps.Step4;
+import com.relation.Steps.Step5_DatatoDB;
+import com.relation.models.GoogleResults;
+import com.relation.models.World;
 import com.relation.util.GoogleQuery;
 import com.relation.util.IStep;
 import com.relation.util.MySpider;
 import com.relation.util.Persistance;
 import com.relation.util.Spider;
-import com.relation.util.Step1;
-import com.relation.util.Step2;
-import com.relation.util.Step3;
 
 public class Starter {
 
@@ -24,11 +26,13 @@ public class Starter {
 	public static void main(String[] args) {
 
 //		IStep s1 = new Step1();
-//		s1.setParams("search", "");
+//		s1.setParams("search", "tennis verein bensheim");
 //		s1.doStep();
 
-		// new Step2().doStep();
-		 new Step3().doStep();
+		 new Step2().doStep();
+			new Step3().doStep();
+		new Step4().doStep();
+		 new Step5_DatatoDB().doStep();
 		
 //		World myworld = new World();
 //		myworld = (World) new Persistance().loadObject("" + myworld.getClass().getSimpleName());

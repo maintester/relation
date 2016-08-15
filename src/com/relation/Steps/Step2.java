@@ -1,4 +1,4 @@
-package com.relation.util;
+package com.relation.Steps;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -14,16 +14,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import com.realtion.models.GoogleResults;
-import com.realtion.models.Person;
-import com.realtion.models.Sites;
+import com.relation.models.GoogleResults;
+import com.relation.models.Person;
+import com.relation.models.Sites;
+import com.relation.util.FileUtils;
+import com.relation.util.FindPerson;
+import com.relation.util.IStep;
+import com.relation.util.MySpider;
 
 public class Step2 implements IStep {
 
 	@Override
 	public void doStep() {
 		// Open the file
-		FindPerson find = new FindPerson();
+		//FindPerson find = new FindPerson();
 		try {
 			FileInputStream fstream = new FileInputStream("textfiles/gr.txt");
 			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
@@ -34,13 +38,15 @@ public class Step2 implements IStep {
 			while ((strLine = br.readLine()) != null) {
 				// Print the content on the console
 				System.out.println(strLine);
+				String[] sa= strLine.split("\\"+FileUtils.getItemDelim());
+				String searchValue = sa[1];
 				MySpider spider = new MySpider();
-				spider.searchSite(strLine);
+				spider.searchSite(sa[0]);
 				System.out.println("HTML DOCS ");
 				for (String hashUrl : spider.htmlDocuments.keySet()) {
 					System.out.println("key: " + hashUrl + " " + spider.htmlDocuments.get(hashUrl));
 					String stext = spider.htmlDocuments.get(hashUrl);
-					stext = stext.replace("\n", "").replace("\r", "");
+					stext = stext.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\\|", "");
 				
 //					ArrayList<Person> persons = (ArrayList<Person>) find.getPersons(spider.htmlDocuments.get(hashUrl));
 //					if(persons.size()< 2){ // only pages with 2 or more persons are important
@@ -63,7 +69,7 @@ public class Step2 implements IStep {
 				for (String s : spider.urlsMap.keySet()) {
 					System.out.println(""+FileUtils.getTStamp() + FileUtils.getItemDelim() +  s + FileUtils.getItemDelim() + spider.urlsMap.get(s)  );
 					//out = s + "|" + spider.urlsMap.get(s) + "\r\n";
-					out = ""+FileUtils.getTStamp() + FileUtils.getItemDelim() +  s + FileUtils.getItemDelim() + spider.urlsMap.get(s) +FileUtils.getLineDelim();
+					out = ""+FileUtils.getTStamp() + FileUtils.getItemDelim() +  s + FileUtils.getItemDelim() + spider.urlsMap.get(s) +FileUtils.getItemDelim() + searchValue +FileUtils.getLineDelim();
 					Files.write(Paths.get(FileUtils.getPathTextFiles()+"urls.txt"), out.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 				}
 			}
