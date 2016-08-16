@@ -36,14 +36,16 @@ public class Step2 implements IStep {
 		doNotUrl = new Persistance().readTextFile("donotcrawlurls.txt");
 		Set<String> grLines = new HashSet<String>();
 		grLines = new Persistance().readResultFile("gr.txt");
-		Set<String> urlLines = new HashSet<String>();
-		urlLines = spider(grLines, doNotUrl);
-		System.out.println("urllinessize: " + urlLines.size());
-		new Persistance().writeResultFile("urls.txt", urlLines);
+		//Set<String> urlLines = new HashSet<String>();
+		MySpider spider = new MySpider();
+		doSpider(spider,grLines, doNotUrl);
+		//System.out.println("urllinessize: " + urlLines.size());
+		
 	}
 	// ************************************************************************
-	private Set<String>spider(Set<String> grLines , Set<String> doNotUrl){
+	private void doSpider(MySpider spider, Set<String> grLines , Set<String> doNotUrl){
 		Set<String> urlLines = new HashSet<String>();
+		Set<String> urlContent = new HashSet<String>();
 		for (String strLine : grLines) {
 			String[] sa = strLine.split("\\" + FileUtils.getItemDelim());
 			String searchValue = sa[1];
@@ -52,23 +54,30 @@ public class Step2 implements IStep {
 				System.out.println("do not crawl " + site);
 			} else {
 				System.out.println("crawling " + site);
-				MySpider spider = new MySpider();
+				
+				spider.init();
 				spider.searchSite(site);
 				//System.out.println("HTML DOCS ");
 				for (String hashUrl : spider.htmlDocuments.keySet()) {
 					//System.out.println("key: " + hashUrl + " " + spider.htmlDocuments.get(hashUrl));
 					String stext = spider.htmlDocuments.get(hashUrl);
-					stext = stext.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\\|", "");
+					stext = stext.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\\|", "").replaceAll("'", "");
+					urlContent.add("" + FileUtils.getTStamp() + FileUtils.getItemDelim() + hashUrl +FileUtils.getItemDelim() + stext +FileUtils.getLineDelim());
 				}
+				new Persistance().writeResultFile("urlcontent.txt", urlContent);
+				urlContent = new HashSet<String>();
 				String out = "";
 				for (String sUrlValue : spider.urlsMap.keySet()) {
 					out = "" + FileUtils.getTStamp() + FileUtils.getItemDelim() + sUrlValue + FileUtils.getItemDelim() + spider.urlsMap.get(sUrlValue)
 							+ FileUtils.getItemDelim() + searchValue + FileUtils.getLineDelim();
 					urlLines.add(out);
 				}
+				new Persistance().writeResultFile("urls.txt", urlLines);
+				urlLines = new HashSet<String>();
+				
 			}
 		}
-		return urlLines;
+		return  ;
 	}
 	// ************************************************************************
 	private boolean isStringInSet(Set<String> stringSet, String value) {
