@@ -7,7 +7,8 @@ import com.relation.models.Person;
 
 public class PersonExtractor {
 
-	public ArrayList<Person> getPersons(Set names, String textline) {
+	// ************************************************************************
+	public ArrayList<Person> getPersons(Set<String> names, String textline) {
 		ArrayList<Person> persons = new ArrayList<Person>();
 		String[] parts = textline.split(" ");
 		int index = 0;
@@ -24,12 +25,22 @@ public class PersonExtractor {
 						family = parts[index - 1];
 					}
 				}
+				family= cleanString(family);
+				
 				System.out.println("I-PER:" + first + ":" + family + ":");
 				persons.add(new Person(first,"",family) );
 			}
 			index++;
 		}
 		return persons;
+	}
+	// ************************************************************************
+	public String cleanString(String sVal){
+		String ret = sVal;
+		ret= ret.replaceAll("\"", "");
+		ret= ret.replaceAll("\\.", "");
+		ret= ret.replaceAll(",", "");
+		return ret;
 	}
 
 }

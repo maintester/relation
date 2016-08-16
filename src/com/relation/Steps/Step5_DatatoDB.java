@@ -43,7 +43,7 @@ public class Step5_DatatoDB implements IStep {
 				String[] sa = line.split("\\|");
 				
 				String s = "";//"Insert into wp_person(personid, val1, val2, val3) values( 'x1','x2','x3','x4');";
-				s= "replace into " + dbtable + " set personid= 'x1' , val1='x2', val2= 'x3', val3='x4'";
+				s= "replace into " + dbtable + " set personid= 'x1' , firstname='x2', midname= 'x3', lastname='x4';";
 				s= s.replace("x1", sa[1]).replace("x2", sa[2].trim()).replace("x3", sa[3].trim()).replace("x4", sa[4].trim());
 				s+= FileUtils.getLineDelim();
 				Files.write(Paths.get(FileUtils.getPathResultFiles() + "sql.txt"), s.getBytes(),
@@ -64,7 +64,7 @@ public class Step5_DatatoDB implements IStep {
 				String s = "";
 				
 				String relid =  Persistance.generateMD5(urlid +personid );
-				s= "replace into " + dbtable + " set relationid= 'xrelid', urlid = 'xurlid' , personid='xpersonid'";
+				s= "replace into " + dbtable + " set relationid= 'xrelid', urlid = 'xurlid' , personid='xpersonid';";
 				s= s.replace("xurlid", urlid ).replace("xpersonid", personid ).replace("xrelid", relid );
 				s+= FileUtils.getLineDelim();
 				Files.write(Paths.get(FileUtils.getPathResultFiles() + "sql.txt"), s.getBytes(),
@@ -81,7 +81,7 @@ public class Step5_DatatoDB implements IStep {
 				//System.out.println(line);
 				String[] sa = line.split("\\|");
 				String s = "";
-				s= "replace into " + dbtable + " set urlid= 'x1' , url='x2', searchval='x3'";
+				s= "replace into " + dbtable + " set urlid= 'x1' , url='x2', searchval='x3';";
 				s= s.replace("x1", sa[1]).replace("x2", sa[2].trim()).replace("x3", sa[3].trim());
 				s+= FileUtils.getLineDelim();
 				Files.write(Paths.get(FileUtils.getPathResultFiles() + "sql.txt"), s.getBytes(),

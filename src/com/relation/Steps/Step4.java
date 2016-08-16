@@ -56,7 +56,7 @@ public class Step4 implements IStep {
 				//out = ""+FileUtils.getTStamp() + FileUtils.getItemDelim() +  s + FileUtils.getLineDelim();
 				//Files.write(Paths.get(FileUtils.getPathTextFiles()+"relations.txt"), out.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			}
-			
+			System.out.println("Persons" + persons.size());
 			new Persistance().writeResultFile("persons.txt", persons);
 			new Persistance().writeResultFile("relations.txt", relations);
 		}

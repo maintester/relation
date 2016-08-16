@@ -42,7 +42,7 @@ public class Step_MakeListForGoogle implements IStep {
 				if(town.indexOf("(")>0){
 					town = town.substring(0,town.indexOf("("));
 				}
-				sValue = town + " " + activ + " verein";
+				sValue = town + " " + activ + " verein" + FileUtils.getLineDelim();
 				Files.write(Paths.get(FileUtils.getPathResultFiles() + "searchfor.txt"), sValue.getBytes(),
 						StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			}

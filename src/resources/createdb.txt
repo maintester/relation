@@ -7,26 +7,35 @@ drop table  personinfo ;
 drop table  relation;
 drop table  location ;
 
+drop table wp_relation2u_person;
+drop table wp_relation2u_relation;
+drop table wp_relation2u_url;
+
+create table wp_relation2u_person(
+  personid varchar(40) NOT NULL ,
+  lastname VARCHAR(40) NOT NULL,
+  midname VARCHAR(40) ,
+  firstname VARCHAR(40) NOT NULL,
+  PRIMARY KEY (personid)
+);
+
+create table wp_relation2u_relation(
+	relationid varchar(40) NOT NULL ,
+	urlid varchar(40) NOT NULL, 
+	personid varchar(40) NOT NULL ,
+	primary key (relationid)
+);
+
+create table wp_relation2u_url(
+	urlid varchar(40) NOT NULL, 
+	url varchar(200) NOT NULL,
+	searchval varchar(200),
+	primary key (urlid)
+);
+
 create table dbversion( version int);
 
-create table person(
-    personid varchar(40) NOT NULL ,
-    lastname VARCHAR(40) NOT NULL,
-    midname VARCHAR(40) ,
-    firstname VARCHAR(40) NOT NULL,
-   PRIMARY KEY ( personid )
-);
-
-create table relation(
-    locationid varchar(40),
-    personId varchar(40) NOT NULL
-    PRIMARY KEY ( locationid )
-);
-create table location(
-    locationid varchar(40),
-    location VARCHAR(200) NOT NULL,
-    PRIMARY KEY ( locationid )
-);
+ 
 COMMIT;
 grant all on relation1.* to 'user1'@'localhost' identified by 'user1';
 insert into version(1);

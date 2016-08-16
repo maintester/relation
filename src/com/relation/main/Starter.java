@@ -28,12 +28,12 @@ public class Starter {
 
 		IStep s1 = new Step1();
 //		s1.setParams("search", "tennis verein bensheim");
-	//	s1.doStep();
+//		s1.doStep();
 //new Step_MakeListForGoogle().doStep();
-	//	 new Step2().doStep();
+	// new Step2().doStep();
 		//	new Step3().doStep();
-		new Step4().doStep();
-//		 new Step5_DatatoDB().doStep();
+//		new Step4().doStep();
+		 new Step5_DatatoDB().doStep();
 		
 //		World myworld = new World();
 //		myworld = (World) new Persistance().loadObject("" + myworld.getClass().getSimpleName());

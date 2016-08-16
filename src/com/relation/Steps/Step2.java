@@ -38,6 +38,7 @@ public class Step2 implements IStep {
 		grLines = new Persistance().readResultFile("gr.txt");
 		Set<String> urlLines = new HashSet<String>();
 		urlLines = spider(grLines, doNotUrl);
+		System.out.println("urllinessize: " + urlLines.size());
 		new Persistance().writeResultFile("urls.txt", urlLines);
 	}
 	// ************************************************************************

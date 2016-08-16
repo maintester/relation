@@ -20,6 +20,6 @@ public class FileUtils {
 		return "namefiles/";
 	}
 	public static String getPathResultFiles(){
-		return "textfiles/";
+		return "resultfiles/";
 	}
 }
