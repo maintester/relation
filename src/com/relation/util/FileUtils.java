@@ -14,9 +14,12 @@ public class FileUtils {
 		return "\r\n";
 	}
 	public static String getPathTextFiles(){
-		return "textfiles\\";
+		return "textfiles/";
 	}
 	public static String getPathNameFiles(){
-		return "namefiles\\";
-	}	
+		return "namefiles/";
+	}
+	public static String getPathResultFiles(){
+		return "textfiles/";
+	}
 }

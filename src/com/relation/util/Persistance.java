@@ -1,17 +1,23 @@
 package com.relation.util;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.DriverManager;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
@@ -29,29 +35,93 @@ public class Persistance {
 
 	private String saveDir = "saveobjects/";
 
-	public static void main(String[] args) {
-		Person o = new Person("a","","c");
-		o.firstName = "a";
-		o.lastName = "b";
-//		String id = new Persistance().insertPerson(o);
-//		o.firstName = "c";
-//		o.lastName = "b";
-//		String id2 = new Persistance().insertPerson(o);
-//		Relation r = new Relation (id,id2,"test.txt");
-//		String rid = new Persistance().insertRelation(r);
+	// ************************************************************************
+	public Set<String> readNameFile(String filename) {
+		Set<String> values = new HashSet<String>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(FileUtils.getPathNameFiles() + filename));
+			for (String line; (line = br.readLine()) != null;) {
+				// System.out.println(line);
+				values.add(line);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return values;
 	}
 
-	
-	public String read(String filename){
-	try {
-		return new String(Files.readAllBytes(Paths.get(filename)));
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		return "";
+	// ************************************************************************
+	public boolean writeResultFile(String filename, Set<String> values) {
+		for (String s : values) {
+			try {
+				Files.write(Paths.get(FileUtils.getPathResultFiles() + filename), s.getBytes(), StandardOpenOption.CREATE,
+						StandardOpenOption.APPEND);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
+
+		}
+		return true;
 	}
+
+	// ************************************************************************
+	public Set<String> readTextFile(String filename) {
+		Set<String> values = new HashSet<String>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(FileUtils.getPathTextFiles() + filename));
+			for (String line; (line = br.readLine()) != null;) {
+				// System.out.println(line);
+				values.add(line);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return values;
 	}
-	
+
+	// ************************************************************************
+	public Set<String> readResultFile(String filename) {
+		Set<String> values = new HashSet<String>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(FileUtils.getPathResultFiles() + filename));
+			for (String line; (line = br.readLine()) != null;) {
+				// System.out.println(line);
+				values.add(line);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return values;
+	}
+
+	// ********************************************************++**************
+	public String read(String filename) {
+		try {
+			return new String(Files.readAllBytes(Paths.get(filename)));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+	}
+
 	public String insertPerson(Person o) {
 		String sql = "insert into person(personid, lastname, midname, firstname ) values ( 'idx', 'X1' , 'X2', 'X3' )";
 		sql = sql.replace("X1", o.lastName);
@@ -59,7 +129,7 @@ public class Persistance {
 		sql = sql.replace("X3", o.firstName);
 		String complete = o.lastName + o.midName + o.firstName;
 		String idx = this.generateMD5(complete);
-		sql = sql.replace("idx", "" +idx );
+		sql = sql.replace("idx", "" + idx);
 		boolean bSuccess = doStatement(sql);
 		if (!bSuccess) {
 			return "0";
@@ -68,20 +138,21 @@ public class Persistance {
 	}
 
 	public String insertRelation(Relation o) {
-//		String sql = "insert into relation(relationid, personid1, personid2, strenght) values ( 'idx', 'X1' , 'X2', X3 )";
-//		sql = sql.replace("X1", o.personId1);
-//		sql = sql.replace("X2", o.personId2);
-//		sql = sql.replace("X3", ""+o.strenght);
-//		
-//		String complete = o.personId1 + o.personId2 ;
-//		String idx = this.generateMD5(complete);
-//		sql = sql.replace("idx", "" + idx);
-//		
-//		boolean bSuccess = doStatement(sql);
-//		if (!bSuccess) {
-//			return "0";
-//		}
-//		return idx;
+		// String sql =
+		// "insert into relation(relationid, personid1, personid2, strenght) values ( 'idx', 'X1' , 'X2', X3 )";
+		// sql = sql.replace("X1", o.personId1);
+		// sql = sql.replace("X2", o.personId2);
+		// sql = sql.replace("X3", ""+o.strenght);
+		//
+		// String complete = o.personId1 + o.personId2 ;
+		// String idx = this.generateMD5(complete);
+		// sql = sql.replace("idx", "" + idx);
+		//
+		// boolean bSuccess = doStatement(sql);
+		// if (!bSuccess) {
+		// return "0";
+		// }
+		// return idx;
 		return "";
 	}
 
