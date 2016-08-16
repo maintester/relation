@@ -43,7 +43,7 @@ public class Step_MakeListForGoogle implements IStep {
 					town = town.substring(0,town.indexOf("("));
 				}
 				sValue = town + " " + activ + " verein";
-				Files.write(Paths.get(FileUtils.getPathTextFiles() + "searchfor.txt"), sValue.getBytes(),
+				Files.write(Paths.get(FileUtils.getPathResultFiles() + "searchfor.txt"), sValue.getBytes(),
 						StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			}
 		}
