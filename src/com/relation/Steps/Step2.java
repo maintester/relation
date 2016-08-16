@@ -3,6 +3,7 @@ package com.relation.Steps;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -21,127 +23,65 @@ import com.relation.util.FileUtils;
 import com.relation.util.FindPerson;
 import com.relation.util.IStep;
 import com.relation.util.MySpider;
+import com.relation.util.Persistance;
 
 public class Step2 implements IStep {
 
+	// ************************************************************************
 	@Override
 	public void doStep() {
 		// Open the file
-		//FindPerson find = new FindPerson();
-		try {
-			FileInputStream fstream = new FileInputStream("textfiles/gr.txt");
-			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-
-			String strLine;
-
-			// Read File Line By Line
-			while ((strLine = br.readLine()) != null) {
-				// Print the content on the console
-				System.out.println(strLine);
-				String[] sa= strLine.split("\\"+FileUtils.getItemDelim());
-				String searchValue = sa[1];
+		// FindPerson find = new FindPerson();
+		Set<String> doNotUrl = new HashSet<String>();
+		doNotUrl = new Persistance().readTextFile("donotcrawlurls.txt");
+		Set<String> grLines = new HashSet<String>();
+		grLines = new Persistance().readResultFile("gr.txt");
+		Set<String> urlLines = new HashSet<String>();
+		urlLines = spider(grLines, doNotUrl);
+		new Persistance().writeResultFile("urls.txt", urlLines);
+	}
+	// ************************************************************************
+	private Set<String>spider(Set<String> grLines , Set<String> doNotUrl){
+		Set<String> urlLines = new HashSet<String>();
+		for (String strLine : grLines) {
+			String[] sa = strLine.split("\\" + FileUtils.getItemDelim());
+			String searchValue = sa[1];
+			String site = sa[0];
+			if (isStringInSet(doNotUrl, site)) {
+				System.out.println("do not crawl " + site);
+			} else {
+				System.out.println("crawling " + site);
 				MySpider spider = new MySpider();
-				spider.searchSite(sa[0]);
-				System.out.println("HTML DOCS ");
+				spider.searchSite(site);
+				//System.out.println("HTML DOCS ");
 				for (String hashUrl : spider.htmlDocuments.keySet()) {
-					System.out.println("key: " + hashUrl + " " + spider.htmlDocuments.get(hashUrl));
+					//System.out.println("key: " + hashUrl + " " + spider.htmlDocuments.get(hashUrl));
 					String stext = spider.htmlDocuments.get(hashUrl);
 					stext = stext.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\\|", "");
-				
-//					ArrayList<Person> persons = (ArrayList<Person>) find.getPersons(spider.htmlDocuments.get(hashUrl));
-//					if(persons.size()< 2){ // only pages with 2 or more persons are important
-//						//spider.htmlDocuments.remove(hashUrl);
-//						spider.urlsMap.remove(hashUrl);
-//					}
-//					 
-//					for (Person p : persons) {
-//						// save to person
-//						String sp = p.personId + "|" + p.lastName + "|" + p.midName + "|" + p.firstName + "\r\n";
-//						Files.write(Paths.get("textfiles/persons.txt"), sp.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-//						// save to person_rel
-//						sp = hashUrl + "|" + p.personId + "\r\n";
-//						Files.write(Paths.get("textfiles/rel_pers.txt"), sp.getBytes(), StandardOpenOption.CREATE,
-//								StandardOpenOption.APPEND);
-//					}
 				}
-				System.out.println("urlsMap   ");
-				String out="";
-				for (String s : spider.urlsMap.keySet()) {
-					System.out.println(""+FileUtils.getTStamp() + FileUtils.getItemDelim() +  s + FileUtils.getItemDelim() + spider.urlsMap.get(s)  );
-					//out = s + "|" + spider.urlsMap.get(s) + "\r\n";
-					out = ""+FileUtils.getTStamp() + FileUtils.getItemDelim() +  s + FileUtils.getItemDelim() + spider.urlsMap.get(s) +FileUtils.getItemDelim() + searchValue +FileUtils.getLineDelim();
-					Files.write(Paths.get(FileUtils.getPathTextFiles()+"urls.txt"), out.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+				String out = "";
+				for (String sUrlValue : spider.urlsMap.keySet()) {
+					out = "" + FileUtils.getTStamp() + FileUtils.getItemDelim() + sUrlValue + FileUtils.getItemDelim() + spider.urlsMap.get(sUrlValue)
+							+ FileUtils.getItemDelim() + searchValue + FileUtils.getLineDelim();
+					urlLines.add(out);
 				}
 			}
-
-			// Close the input stream
-			br.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
+		return urlLines;
 	}
-
-	// @Override
-	// public void doStep() {
-	//
-	//
-	//
-	// int maxUrl = 10;
-	// int countUrl = 0;
-	// GoogleResults gr = new GoogleResults();
-	// Sites si = new Sites();
-	// gr = (GoogleResults) new
-	// Persistance().loadObject(gr.getClass().getSimpleName());
-	// if (gr == null) {
-	// return;
-	// }
-	//
-	// if (gr.newUrls.size() < 1) {
-	// return;
-	// }
-	// si = (Sites) new Persistance().loadObject(si.getClass().getSimpleName());
-	// if (si == null) {
-	// si = new Sites();
-	// }
-	//
-	// String url = gr.newUrls.get(1);
-	//
-	// si.addSite(url);
-	// MySpider spider = new MySpider();
-	// List<String> newPages = spider.search(url);
-	//
-	// HashMap<String, String> urlRes = spider.getHtmlDocuments();
-	// for (String sKey : urlRes.keySet()) {
-	// si.addPage(url, sKey, urlRes.get(sKey));
-	// System.out.println("Putting" + url + " " + sKey + " " +
-	// urlRes.get(sKey));
-	// }
-	// for (String newurl : newPages) {
-	// countUrl++;
-	// if (countUrl < maxUrl) {
-	// spider.search(newurl);
-	// urlRes = spider.getHtmlDocuments();
-	// for (String sKey : urlRes.keySet()) {
-	// si.addPage(url, sKey, urlRes.get(sKey));
-	// System.out.println("Putting" + url + " " + sKey + " " +
-	// urlRes.get(sKey));
-	// }
-	// }
-	// }
-	//
-	//
-	// new Persistance().saveObject(si);
-	// return;
-	// }
-
+	// ************************************************************************
+	private boolean isStringInSet(Set<String> stringSet, String value) {
+		boolean bRet = false;
+		for (String sVal : stringSet) {
+			if (value.indexOf(sVal) > 0) {
+				bRet = true;
+			}
+		}
+		return bRet;
+	}
+	// ************************************************************************
 	@Override
 	public void setParams(String paramName, String paramValue) {
-		// TODO Auto-generated method stub
-
 	}
+	// ************************************************************************
 }

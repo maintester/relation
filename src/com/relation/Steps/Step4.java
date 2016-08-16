@@ -20,64 +20,89 @@ import com.relation.models.Relation;
 import com.relation.models.Sites;
 import com.relation.util.FileUtils;
 import com.relation.util.IStep;
+import com.relation.util.Persistance;
 import com.relation.util.PersonExtractor;
 
 public class Step4 implements IStep {
 
+	ArrayList<Person> allPersons = new ArrayList<Person>();
+	ArrayList<Relation> allRels = new ArrayList<Relation>();
+	Set<String> names = new Persistance().readNameFile("firstname_unique.txt");
+	PersonExtractor pext = new PersonExtractor();
+	Set<String> persons = new HashSet<String>();
+	Set<String> relations = new HashSet<String>();
+
+	// ************************************************************************
 	@Override
 	public void doStep() {
-		ArrayList<Person> allPersons = new ArrayList<Person>();
-		ArrayList<Relation> allRels= new ArrayList<Relation>() ; 
-		Set<String> names = new HashSet<String>();
-
-		try {
-			BufferedReader br = new BufferedReader(
-					new FileReader(FileUtils.getPathNameFiles() + "firstname_unique.txt"));
-			for (String line; (line = br.readLine()) != null;) {
-				names.add(line);
-				//System.out.println(line);
-			}
-			PersonExtractor pext = new PersonExtractor();
-			BufferedReader brcontent = new BufferedReader(
-					new FileReader(FileUtils.getPathTextFiles() + "urlcontent.txt"));
-			for (String line; (line = brcontent.readLine()) != null;) {
-				 System.out.println(line);
-				String[] sarrContentLine = line.split("\\"+FileUtils.getItemDelim());
-				String sContent = sarrContentLine[2];
-				System.out.println(sContent);
-				ArrayList<Person> pers = pext.getPersons(names, sContent);
-				ArrayList<Relation> rels = new ArrayList<Relation>();
-				for(Person p : pers){
-					rels.add(new Relation(p.personId ,sarrContentLine[1] ));
-				}
-				allPersons.addAll(pers);
-				allRels.addAll(rels);
-			}
-			String out="";
-			String s="";
+		if (readLines()) {
+			
+			StringBuffer out = new StringBuffer();
 			for (Person p :allPersons){
-				s= p.personId  + FileUtils.getItemDelim() + p.firstName +FileUtils.getItemDelim() + p.midName + FileUtils.getItemDelim() + p.lastName ;
-				out = ""+FileUtils.getTStamp() + FileUtils.getItemDelim() +  s +FileUtils.getLineDelim();
-				Files.write(Paths.get(FileUtils.getPathTextFiles()+"persons.txt"), out.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-				
+				out = new StringBuffer();
+				out.append(""+FileUtils.getTStamp() + FileUtils.getItemDelim());
+				out.append( p.personId  + FileUtils.getItemDelim() + p.firstName +FileUtils.getItemDelim() + p.midName + FileUtils.getItemDelim() + p.lastName );
+				out.append(FileUtils.getLineDelim());
+				persons.add(out.toString());
+				//Files.write(Paths.get(FileUtils.getPathTextFiles()+"persons.txt"), out.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			}
 			for (Relation r :allRels){
-				s= r.locationId  + FileUtils.getItemDelim() + r.personId;
-				out = ""+FileUtils.getTStamp() + FileUtils.getItemDelim() +  s + FileUtils.getLineDelim();
-				Files.write(Paths.get(FileUtils.getPathTextFiles()+"relations.txt"), out.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+				out = new StringBuffer();
+				out.append(FileUtils.getTStamp() + FileUtils.getItemDelim() );
+				out.append(r.locationId  + FileUtils.getItemDelim() + r.personId);
+				out.append(FileUtils.getLineDelim());
+				relations.add(out.toString());
+				//s= r.locationId  + FileUtils.getItemDelim() + r.personId;
+				//out = ""+FileUtils.getTStamp() + FileUtils.getItemDelim() +  s + FileUtils.getLineDelim();
+				//Files.write(Paths.get(FileUtils.getPathTextFiles()+"relations.txt"), out.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			}
-
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			new Persistance().writeResultFile("persons.txt", persons);
+			new Persistance().writeResultFile("relations.txt", relations);
 		}
 
 		return;
 	}
 
+	// ************************************************************************
+	private boolean readLines() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(FileUtils.getPathResultFiles() + "urlcontent.txt"));
+			for (String line; (line = br.readLine()) != null;) {
+				// System.out.println(line);
+				processLine(line);
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	// ************************************************************************
+	private void processLine(String line) {
+		String[] sarrContentLine = line.split("\\" + FileUtils.getItemDelim());
+		String sContent = sarrContentLine[2];
+		String urlId = sarrContentLine[1];
+		System.out.println(sContent);
+		ArrayList<Person> pers = pext.getPersons(names, sContent);
+		ArrayList<Relation> rels = new ArrayList<Relation>();
+		for (Person p : pers) {
+			rels.add(new Relation(p.personId, urlId));
+		}
+		System.out.println(line);
+		System.out.println("Personsize "+pers.size());
+		allPersons.addAll(pers);
+		allRels.addAll(rels);
+	}
+
+	// ************************************************************************
 	@Override
 	public void setParams(String paramName, String paramValue) {
 		// TODO Auto-generated method stub

@@ -20,73 +20,74 @@ import com.relation.models.Relation;
 import com.relation.models.Sites;
 import com.relation.util.FileUtils;
 import com.relation.util.IStep;
+import com.relation.util.Persistance;
 import com.relation.util.PersonExtractor;
 
 public class Step5_DatatoDB implements IStep {
 
 	@Override
 	public void doStep() {
-		StringBuffer sql = new StringBuffer(); 
-		ArrayList<Person> allPersons = new ArrayList<Person>();
-		ArrayList<Relation> allRels= new ArrayList<Relation>() ; 
-		Set<String> names = new HashSet<String>();
-
+		//StringBuffer sql = new StringBuffer(); 
+		//ArrayList<Person> allPersons = new ArrayList<Person>();
+		//ArrayList<Relation> allRels= new ArrayList<Relation>() ; 
+		//Set<String> names = new HashSet<String>();
+		String dbtable = " wp_relation2u ";
 		try {
 			// write persons to file
 			BufferedReader br = new BufferedReader(
-					new FileReader(FileUtils.getPathTextFiles() + "persons.txt"));
+					new FileReader(FileUtils.getPathResultFiles() + "persons.txt"));
+			dbtable = " wp_relation2u_person ";
 			for (String line; (line = br.readLine()) != null;) {
 				//names.add(line);
 				//System.out.println(line);
 				String[] sa = line.split("\\|");
-//				REPLACE INTO `transcripts`
-//				SET `ensembl_transcript_id` = 'ENSORGT00000000001',
-//				`transcript_chrom_start` = 12345,
-//				`transcript_chrom_end` = 12678;
+				
 				String s = "";//"Insert into wp_person(personid, val1, val2, val3) values( 'x1','x2','x3','x4');";
-				s= "REPLACE into wp_person set personid= 'x1' , val1='x2', val2= 'x3', val3='x4'";
+				s= "replace into " + dbtable + " set personid= 'x1' , val1='x2', val2= 'x3', val3='x4'";
 				s= s.replace("x1", sa[1]).replace("x2", sa[2].trim()).replace("x3", sa[3].trim()).replace("x4", sa[4].trim());
 				s+= FileUtils.getLineDelim();
-				Files.write(Paths.get(FileUtils.getPathTextFiles() + "sql.txt"), s.getBytes(),
+				Files.write(Paths.get(FileUtils.getPathResultFiles() + "sql.txt"), s.getBytes(),
 						StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			}
+			br.close();
 			// write realtions to file
 			br = new BufferedReader(
-					new FileReader(FileUtils.getPathTextFiles() + "relations.txt"));
+					new FileReader(FileUtils.getPathResultFiles() + "relations.txt"));
+			//1471269392243|7ee0192280c1bf363e4a072a17655aae|a1dd8f3d41a6bad6218f6f864d12fbee
+			dbtable = " wp_relation2u_relation ";
 			for (String line; (line = br.readLine()) != null;) {
 				//names.add(line);
 				//System.out.println(line);
 				String[] sa = line.split("\\|");
-//				REPLACE INTO `transcripts`
-//				SET `ensembl_transcript_id` = 'ENSORGT00000000001',
-//				`transcript_chrom_start` = 12345,
-//				`transcript_chrom_end` = 12678;
+				String urlid= sa[1].trim();
+				String personid = sa[2].trim();
 				String s = "";
-				s= "REPLACE into wp_person set urlid= 'x1' , personid='x2'";
-				s= s.replace("x1", sa[1]).replace("x2", sa[2].trim());
+				
+				String relid =  Persistance.generateMD5(urlid +personid );
+				s= "replace into " + dbtable + " set relationid= 'xrelid', urlid = 'xurlid' , personid='xpersonid'";
+				s= s.replace("xurlid", urlid ).replace("xpersonid", personid ).replace("xrelid", relid );
 				s+= FileUtils.getLineDelim();
-				Files.write(Paths.get(FileUtils.getPathTextFiles() + "sql.txt"), s.getBytes(),
+				Files.write(Paths.get(FileUtils.getPathResultFiles() + "sql.txt"), s.getBytes(),
 						StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			}
+			br.close();
 			// write urls to file
 			br = new BufferedReader(
-					new FileReader(FileUtils.getPathTextFiles() + "urls.txt"));
+					new FileReader(FileUtils.getPathResultFiles() + "urls.txt"));
+			dbtable = " wp_relation2u_url ";
+			//1471267362153|9e418f62a561d2a645df060cb2341b5c|http://www.wls-ev.de/hafen.html|Berlin  wassersport verein
 			for (String line; (line = br.readLine()) != null;) {
 				//names.add(line);
 				//System.out.println(line);
 				String[] sa = line.split("\\|");
-//				REPLACE INTO `transcripts`
-//				SET `ensembl_transcript_id` = 'ENSORGT00000000001',
-//				`transcript_chrom_start` = 12345,
-//				`transcript_chrom_end` = 12678;
 				String s = "";
-				s= "REPLACE into wp_person set urlid= 'x1' , val1='x2', val2='x3'";
+				s= "replace into " + dbtable + " set urlid= 'x1' , url='x2', searchval='x3'";
 				s= s.replace("x1", sa[1]).replace("x2", sa[2].trim()).replace("x3", sa[3].trim());
 				s+= FileUtils.getLineDelim();
-				Files.write(Paths.get(FileUtils.getPathTextFiles() + "sql.txt"), s.getBytes(),
+				Files.write(Paths.get(FileUtils.getPathResultFiles() + "sql.txt"), s.getBytes(),
 						StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 			}			
-			 
+			br.close(); 
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

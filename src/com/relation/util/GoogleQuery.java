@@ -10,7 +10,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class GoogleQuery {
+import com.relation.interfaces.IGoogleQuery;
+
+
+
+public class GoogleQuery implements IGoogleQuery{
 
   private static Pattern patternDomainName;
   private Matcher matcher;
@@ -40,11 +44,11 @@ public class GoogleQuery {
 	return domainName;
 		
   }
-	
+ @Override	
   public Set<String> getDataFromGoogle(String query) {
 		
 	Set<String> result = new HashSet<String>();	
-	String request = "https://www.google.com/search?q=" + query + "&num=20";
+	String request = "https://www.google.com/search?q=" + query + "&num=10";
 	System.out.println("Sending request..." + request);
 		
 	try {
