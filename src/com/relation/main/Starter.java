@@ -25,15 +25,24 @@ public class Starter {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
+		//new Step_MakeListForGoogle().doStep();
 		IStep s1 = new Step1();
 //		s1.setParams("search", "tennis verein bensheim");
+<<<<<<< HEAD
 //		s1.doStep();
 //new Step_MakeListForGoogle().doStep();
 	// new Step2().doStep();
 	///	 	new Step3().doStep();
 		new Step4().doStep();
 	//	 new Step5_DatatoDB().doStep();
+=======
+	//	s1.doStep();
+
+//	 new Step2().doStep();
+		//	new Step3().doStep();
+	//	new Step4().doStep();
+		 new Step5_DatatoDB().doStep();
+>>>>>>> ff9734157640a59e89be52af1868db8e0fae1e10
 		
 //		World myworld = new World();
 //		myworld = (World) new Persistance().loadObject("" + myworld.getClass().getSimpleName());

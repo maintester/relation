@@ -30,6 +30,7 @@ public class Step1 implements IStep {
 	private Set<String> getGoogleData(GoogleQuery query) {
 		int start = Limits.START_IN_GR;
 		int stop = Limits.STOP_IN_GR;
+		System.out.println("Starting at "+start + "  stoping at" +stop);
 		Set<String> result = new HashSet<String>();
 		searchs = new Persistance().readResultFile("searchfor.txt");
 		int counter = 0;

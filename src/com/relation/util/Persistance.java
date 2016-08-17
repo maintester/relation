@@ -21,6 +21,7 @@ import java.util.Set;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
+import com.relation.interfaces.IPersistance;
 import com.relation.models.Person;
 import com.relation.models.Relation;
 
@@ -31,11 +32,12 @@ import com.relation.models.Relation;
  *         http://beginwithjava.blogspot.de/2011/04/java-file-save-and-file
  *         -load-objects.html
  */
-public class Persistance {
+public class Persistance implements IPersistance{
 
 	private String saveDir = "saveobjects/";
 
 	// ************************************************************************
+	@Override
 	public Set<String> readNameFile(String filename) {
 		Set<String> values = new HashSet<String>();
 		try {
@@ -56,6 +58,7 @@ public class Persistance {
 	}
 
 	// ************************************************************************
+	@Override
 	public boolean writeResultFile(String filename, Set<String> values) {
 		for (String s : values) {
 			try {
@@ -72,6 +75,7 @@ public class Persistance {
 	}
 
 	// ************************************************************************
+	@Override
 	public Set<String> readTextFile(String filename) {
 		Set<String> values = new HashSet<String>();
 		try {
@@ -92,6 +96,7 @@ public class Persistance {
 	}
 
 	// ************************************************************************
+	@Override
 	public Set<String> readResultFile(String filename) {
 		Set<String> values = new HashSet<String>();
 		try {

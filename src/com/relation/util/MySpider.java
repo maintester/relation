@@ -37,6 +37,15 @@ public class MySpider {
 
 	private List<String> pagesToVisit = new LinkedList<String>();
 	boolean siteMaxReached = false;
+	
+	// ************************************************************************
+	public void init() {
+		pagesVisited = new HashSet<String>();
+		htmlDocuments = new HashMap<String, String>();
+		urlsMap = new HashMap<String, String>();
+		pagesToVisit = new LinkedList<String>();
+		siteMaxReached = false;
+	}
 	// ************************************************************************
 	public void searchSite(String baseurl) {
 		if (baseurl.indexOf("http") == -1) {
@@ -73,6 +82,9 @@ public class MySpider {
 				contentType = connection.response().contentType();
 			} catch (UnsupportedMimeTypeException e1) {
 				contentType = e1.getMimeType();
+			}
+			catch( Exception e){
+				contentType="Error";
 			}
 
 			// System.out.println(contentType);
@@ -184,6 +196,8 @@ public class MySpider {
 		Files.copy(url.openStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 		return targetPath;
 	}
+
+
 
 	// ***********************************************************
 	// public HashMap<String, String> getHtmlDocuments() {
