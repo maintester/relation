@@ -8,13 +8,19 @@ import com.relation.models.Person;
 public class PersonExtractor {
 
 	// ************************************************************************
-	public ArrayList<Person> getPersons(Set<String> names, String textline) {
+	public ArrayList<Person> getPersons(Set<String> forenames, String textline) {
+		//textline = beautifyLine(textline);
 		ArrayList<Person> persons = new ArrayList<Person>();
 		String[] parts = textline.split(" ");
 		int index = 0;
-		for (String part : parts) {
+		int max = parts.length;
+		boolean havePerson = false;
+		for ( index = 0; index < max ; index ++) {
+			
+			String part = parts[index];
 			part = part.trim();
-			if (names.contains(part)) {
+			if (forenames.contains(part)) {
+				havePerson = true;
 				String first = part;
 				String family = "";
 				if (parts.length > index) {
@@ -25,22 +31,46 @@ public class PersonExtractor {
 						family = parts[index - 1];
 					}
 				}
-				family= cleanString(family);
+				family = cleanString(family);
 				
-				System.out.println("I-PER:" + first + ":" + family + ":");
-				persons.add(new Person(first,"",family) );
+				if(family.length()> 1 && Character.isLowerCase(family.charAt(0))){havePerson= false;}
+				if (havePerson) {
+					//System.out.println(family);
+					System.out.println("I-PER:" + first + ":" + family + ":");
+					persons.add(new Person(first, "", family));
+				}
 			}
-			index++;
 		}
 		return persons;
 	}
+
 	// ************************************************************************
-	public String cleanString(String sVal){
+	public String beautifyLine(String textline) {
+		textline = " " + textline + " ";
+		textline = textline.replace("/", " ");
+		String sRet = "";
+		char[] chars = textline.toCharArray();
+		for (int i = 1, n = chars.length-1; i < n; i++) {
+			char nextChar = chars[i + 1];
+			char prevChar = chars[i - 1];
+			char currentChar = chars[i];
+			if (Character.isUpperCase(currentChar) == true && prevChar != ' ') {
+				sRet = sRet + " "; // vor jedem Großbuchstaben ein leerzeichen,
+									// außer Headings in Big letters
+			}
+			sRet = sRet + currentChar;
+		}
+		return sRet;
+	}
+
+	// ************************************************************************
+	public String cleanString(String sVal) {
 		String ret = sVal;
-		ret= ret.replaceAll("\"", "");
-		ret= ret.replaceAll("\\.", "");
-		ret= ret.replaceAll(",", "");
+		ret = ret.replaceAll("\"", "");
+		ret = ret.replaceAll("\\.", "");
+		ret = ret.replaceAll(",", "");
 		return ret;
 	}
+	// ************************************************************************
 
 }

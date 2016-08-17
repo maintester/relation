@@ -46,7 +46,7 @@ public class MySpider {
 		pagesVisited.add(baseurl);
 		while (pagesToVisit.size() > 0) {
 			if (pagesToVisit.get(0).contains(baseurl)) {
-				System.out.println("call searchurl" + pagesToVisit.get(0));
+				System.out.println("call searchurl " + pagesToVisit.get(0));
 				searchOneUrl(baseurl, pagesToVisit.get(0));
 				pagesVisited.add(pagesToVisit.get(0));
 			}
@@ -116,8 +116,11 @@ public class MySpider {
 				result = result.replaceAll("\\|", "");
 				String sp = "" + FileUtils.getTStamp() + FileUtils.getItemDelim() + urlHash + FileUtils.getItemDelim() + result
 						+ FileUtils.getLineDelim();
-				Files.write(Paths.get(FileUtils.getPathTextFiles() + "urlcontent.txt"), sp.getBytes(), StandardOpenOption.CREATE,
-						StandardOpenOption.APPEND);
+				Set<String> values = new HashSet<String>();
+				values.add(sp);
+				new Persistance().writeResultFile("urlcontent.txt", values);
+//				Files.write(Paths.get(FileUtils.getPathResultFiles() + "urlcontent.txt"), sp.getBytes(), StandardOpenOption.CREATE,
+//						StandardOpenOption.APPEND);
 				return;
 			}
 

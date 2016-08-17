@@ -11,3 +11,7 @@ http://aylien.com/text-api
 http://cogitoapi.com/semanticdataprocessingapipricing/
 
 https://www.bitext.com/text-analysis-api/#What-languages-are-available
+
+
+http://www.onomastik.com/Vornamen-Lexikon/vornamen_mit_a.html
+http://www.familienbande24.de/vornamen
