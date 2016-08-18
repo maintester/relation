@@ -30,5 +30,13 @@ public class PersonExtractor_Test {
 		String newtextline = pex.beautifyLine(textline);
 		assertTrue("Holger Reinecke Peter Müller".equalsIgnoreCase( newtextline));
 	}
+	
+	@Test
+	public void testBeautify_NumberinText() {
+		PersonExtractor pex = new PersonExtractor();
+		String textline = "HolgerReinecke1/Peter Müller";
+		String newtextline = pex.beautifyLine(textline);
+		assertTrue("Holger Reinecke 1 Peter Müller".equalsIgnoreCase( newtextline));
+	}
 
 }
