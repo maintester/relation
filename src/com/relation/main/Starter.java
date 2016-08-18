@@ -10,7 +10,7 @@ import com.relation.Steps.Step2;
 import com.relation.Steps.Step3;
 import com.relation.Steps.Step4;
 import com.relation.Steps.Step5_DatatoDB;
-import com.relation.Steps.Step_MakeListForGoogle;
+import com.relation.Steps.Step_0_MakeListForGoogle;
 import com.relation.models.GoogleResults;
 import com.relation.models.World;
 import com.relation.util.GoogleQuery;
@@ -25,24 +25,16 @@ public class Starter {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//new Step_MakeListForGoogle().doStep();
+		new Step_0_MakeListForGoogle().doStep();
 		IStep s1 = new Step1();
 //		s1.setParams("search", "tennis verein bensheim");
-<<<<<<< HEAD
-//		s1.doStep();
-//new Step_MakeListForGoogle().doStep();
-	// new Step2().doStep();
-	///	 	new Step3().doStep();
-		new Step4().doStep();
-	//	 new Step5_DatatoDB().doStep();
-=======
-	//	s1.doStep();
+ 
+		s1.doStep();
 
 //	 new Step2().doStep();
 		//	new Step3().doStep();
 	//	new Step4().doStep();
-		 new Step5_DatatoDB().doStep();
->>>>>>> ff9734157640a59e89be52af1868db8e0fae1e10
+		// new Step5_DatatoDB().doStep();
 		
 //		World myworld = new World();
 //		myworld = (World) new Persistance().loadObject("" + myworld.getClass().getSimpleName());

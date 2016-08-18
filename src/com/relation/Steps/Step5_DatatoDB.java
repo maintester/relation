@@ -40,7 +40,7 @@ public class Step5_DatatoDB implements IStep {
 			dbtable = " wp_relation2u_person ";
 			for (String line; (line = br.readLine()) != null;) {
 				//names.add(line);
-				//System.out.println(line);
+				System.out.println(line);
 				String[] sa = line.split("\\|");
 				
 				String s = "";//"Insert into wp_person(personid, val1, val2, val3) values( 'x1','x2','x3','x4');";
