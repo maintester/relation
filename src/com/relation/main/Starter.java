@@ -1,5 +1,7 @@
 package com.relation.main;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,16 +22,22 @@ import com.relation.util.Persistance;
 import com.relation.util.Spider;
 
 public class Starter {
-
+	private static String OS = System.getProperty("os.name").toLowerCase();
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new Step_0_MakeListForGoogle().doStep();
+		System.out.println(OS);
+		 
+	 
+		//new Step_0_MakeListForGoogle().doStep();
+	 
 		IStep s1 = new Step1();
 //		s1.setParams("search", "tennis verein bensheim");
 
-	//	s1.doStep();
+		s1.doStep();
+		
+		
 
 //	 new Step2().doStep();
 		//	new Step3().doStep();
@@ -37,7 +45,7 @@ public class Starter {
 
 		// new Step5_DatatoDB().doStep();
 
-		 new Step5_DatatoDB().doStep();
+		// new Step5_DatatoDB().doStep();
 
 
 		

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -100,7 +101,8 @@ public class Persistance implements IPersistance{
 	public Set<String> readResultFile(String filename) {
 		Set<String> values = new HashSet<String>();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(FileUtils.getPathResultFiles() + filename));
+			//BufferedReader br = new BufferedReader(new FileReader(FileUtils.getPathResultFiles() + filename));
+			BufferedReader br = new BufferedReader( new InputStreamReader( new FileInputStream(FileUtils.getPathResultFiles() + filename), "UTF8"));
 			for (String line; (line = br.readLine()) != null;) {
 				// System.out.println(line);
 				values.add(line);

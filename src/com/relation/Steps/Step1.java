@@ -1,5 +1,6 @@
 package com.relation.Steps;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,11 +25,13 @@ public class Step1 implements IStep {
 	// *************************************************************************
 	@Override
 	public void doStep() {
+		System.out.println("start Step " +new Date().toString());
 		logger.log(Level.INFO, "step2");
 		GoogleQuery query = new GoogleQuery();
 		IPersistance persistance = new Persistance();
 		Set<String> sResult = getGoogleData(query, persistance);
 		persistance.writeResultFile("gr.txt", sResult);
+		System.out.println("stop Step " +new Date().toString());
 		return;
 	}
 
@@ -43,6 +46,7 @@ public class Step1 implements IStep {
 		for (String sQuery : searchs) {
 			counter++;
 			if (counter >= start && counter < stop) {
+				System.out.println("Time" +new Date().toString());
 				System.out.println("counter "+counter);
 				Set<String> sUrls = query.getDataFromGoogle(sQuery);
 				try {

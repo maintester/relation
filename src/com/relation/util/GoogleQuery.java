@@ -1,6 +1,9 @@
 package com.relation.util;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -45,22 +48,40 @@ public class GoogleQuery implements IGoogleQuery{
 		
   }
  @Override	
-  public Set<String> getDataFromGoogle(String query) {
-		
+  public Set<String> getDataFromGoogle(String pquery) {
+	String query = pquery;
 	Set<String> result = new HashSet<String>();	
-	String request = "https://www.google.com/search?q=" + query + "&num=5";
+	String request = "";
+	
+	 
+		//request = "https://www.google.com/search?q=" +  URLEncoder.encode(query,"ISO_8859-15")   + "&num=5";
+		//"Cp1252"
+	//query= query.replaceAll("  ", " ");
+	//query= query.replaceAll(" ", " ");
+	query= query.replaceAll("Ä", "%C3%84");
+	query= query.replaceAll("ä", "%C3%A4");
+	query= query.replaceAll("Ö", "%C3%96");
+	query= query.replaceAll("ö", "%C3%B6");
+	query= query.replaceAll("Ü", "%C3%9C");
+	query= query.replaceAll("ü", "%C3%bC");
+	//query=""
+	request = "http://www.google.com/search?q=" + query  + "&num=5";
+	//request ="https://www.bing.com/search?q="+ query;
+	//https://duckduckgo.com/search?q=' + query,
 	System.out.println("Sending request..." + request);
-		
+	 
 	try {
 
 		// need http protocol, set this as a Google bot agent :)
+		String agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3";
+		agent=  "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
 		Document doc = Jsoup
 			.connect(request)
-			.userAgent(
-			  "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")
+			.userAgent(agent)
 			.timeout(5000).get();
 
 		// get all links
+		System.out.println(doc.text());
 		Elements links = doc.select("a[href]");
 		for (Element link : links) {
 
