@@ -35,11 +35,11 @@ public class Starter {
 		IStep s1 = new Step1();
 //		s1.setParams("search", "tennis verein bensheim");
 
-		s1.doStep();
+		//s1.doStep();
 		
 		
 
-//	 new Step2().doStep();
+	 new Step2().doStep();
 		//	new Step3().doStep();
 	//	new Step4().doStep();
 

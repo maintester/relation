@@ -9,11 +9,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.activation.MimetypesFileTypeMap;
 
@@ -26,6 +29,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
 
+import com.relation.interfaces.IPersistance;
+import com.relation.util.log.MyLogger;
+
 public class MySpider {
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
 	private static final int MAX_PAGES_TO_SEARCH = 20;
@@ -37,15 +43,38 @@ public class MySpider {
 
 	private List<String> pagesToVisit = new LinkedList<String>();
 	boolean siteMaxReached = false;
-	
+	private Set<String> fetchedUrls = null;
+
+	private IPersistance persistance = null;
+	// use the classname for the logger, this way you can refactor
+	  private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
 	// ************************************************************************
-	public void init() {
+	public void init(IPersistance ppersistance) {
+		try {
+			MyLogger.setup();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 LOGGER.setLevel(Level.INFO);
+		    LOGGER.severe("Info Log");
+		    LOGGER.warning("Info Log");
+		persistance = ppersistance;
+	    LOGGER.warning("Info Log2");
+
+	}
+
+	// ************************************************************************
+	public void clear() {
 		pagesVisited = new HashSet<String>();
 		htmlDocuments = new HashMap<String, String>();
 		urlsMap = new HashMap<String, String>();
 		pagesToVisit = new LinkedList<String>();
 		siteMaxReached = false;
+		fetchedUrls = persistance.readUrls();
 	}
+
 	// ************************************************************************
 	public void searchSite(String baseurl) {
 		if (baseurl.indexOf("http") == -1) {
@@ -67,8 +96,12 @@ public class MySpider {
 
 	// ************************************************************************
 	public void searchOneUrl(String baseUrl, String url) {
-	
+
 		String urlHash = Persistance.generateMD5(url);
+		if (fetchedUrls.contains(urlHash)) {
+			System.out.println("Duplicate " + url);
+			return;
+		}
 		urlsMap.put(urlHash, url);
 
 		// System.out.println("Hole " + url);
@@ -82,9 +115,8 @@ public class MySpider {
 				contentType = connection.response().contentType();
 			} catch (UnsupportedMimeTypeException e1) {
 				contentType = e1.getMimeType();
-			}
-			catch( Exception e){
-				contentType="Error";
+			} catch (Exception e) {
+				contentType = "Error";
 			}
 
 			// System.out.println(contentType);
@@ -130,26 +162,30 @@ public class MySpider {
 						+ FileUtils.getLineDelim();
 				Set<String> values = new HashSet<String>();
 				values.add(sp);
-				new Persistance().writeResultFile("urlcontent.txt", values);
-//				Files.write(Paths.get(FileUtils.getPathResultFiles() + "urlcontent.txt"), sp.getBytes(), StandardOpenOption.CREATE,
-//						StandardOpenOption.APPEND);
+				persistance.writeResultFile("urlcontent.txt", values);
+				// Files.write(Paths.get(FileUtils.getPathResultFiles() +
+				// "urlcontent.txt"), sp.getBytes(), StandardOpenOption.CREATE,
+				// StandardOpenOption.APPEND);
 				return;
 			}
 
 			if (contentType.contains("application/pdf")) {
-				MySpider.downloadPdf(url, "");
+				Path pa = MySpider.downloadPdf(url, "");
 				System.out.println("downloading PDF" + url);
-				File input = new File(MySpider.PDF_Name);
+				File input = pa.toFile();
 
 				PDDocument pd;
 				try {
 					pd = PDDocument.load(input);
-					input = null;
+
 					PDFTextStripper stripper = new PDFTextStripper();
 					String result = stripper.getText(pd);
+					pd.close();
 					result = result.replaceAll("\r", "");
 					result = result.replaceAll("\n", "");
 					result = result.replaceAll("\\|", "");
+					input = null;
+					pa.toFile().delete();
 					// htmlDocuments.put(urlHash, result);
 					// System.out.println(result);
 					htmlDocuments.put(urlHash, result);
@@ -191,13 +227,11 @@ public class MySpider {
 	public static Path downloadPdf(String sourceUrl, String targetDirectory) throws MalformedURLException, IOException {
 		URL url = new URL(sourceUrl);
 		String fileName = url.getFile();
-		fileName = MySpider.PDF_Name;
+		fileName = "C_" + new Date().getTime() + "_" + MySpider.PDF_Name;
 		Path targetPath = new File(targetDirectory + fileName).toPath();
 		Files.copy(url.openStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 		return targetPath;
 	}
-
-
 
 	// ***********************************************************
 	// public HashMap<String, String> getHtmlDocuments() {

@@ -37,8 +37,8 @@ public class Step1 implements IStep {
 
 	// *************************************************************************
 	private Set<String> getGoogleData(GoogleQuery query,IPersistance persistance) {
-		int start = Limits.START_IN_GR;
-		int stop = Limits.STOP_IN_GR;
+		int start = Limits.START_IN_SEARCHFOR;
+		int stop = Limits.STOP_IN_SEARCHFOR;
 		System.out.println("Starting at "+start + "  stoping at" +stop);
 		Set<String> result = new HashSet<String>();
 		searchs = persistance.readResultFile("searchfor.txt");

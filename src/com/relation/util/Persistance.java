@@ -36,7 +36,26 @@ import com.relation.models.Relation;
 public class Persistance implements IPersistance{
 
 	private String saveDir = "saveobjects/";
+	// ************************************************************************
+	@Override
+	public Set<String> readUrls() {
+		Set<String> values = new HashSet<String>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(FileUtils.getPathResultFiles()+ "urls.txt"));
+			for (String line; (line = br.readLine()) != null;) {
+				// System.out.println(line);
+				values.add(line.split("\\|")[1]);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+		return values;
+	}
 	// ************************************************************************
 	@Override
 	public Set<String> readNameFile(String filename) {

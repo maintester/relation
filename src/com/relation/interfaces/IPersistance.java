@@ -12,4 +12,6 @@ public interface IPersistance {
 
 	Set<String> readResultFile(String filename);
 
+	Set<String> readUrls();
+
 }
