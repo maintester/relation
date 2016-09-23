@@ -48,7 +48,8 @@ public class Persistance implements IPersistance{
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			// does not matter it 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -32,8 +32,13 @@ public class PersonExtractor {
 					}
 				}
 				family = cleanString(family);
-
-				if (family.length() > 1 && Character.isLowerCase(family.charAt(0))) {
+				if(family.length()  > 2  && "abcefghijklmnopqrstuvwxyz".indexOf(family.substring(0,1).toLowerCase())== -1){
+					havePerson = false;
+				}
+				if (family.length() < 3 ) {
+					havePerson = false;
+				}
+				if( family.length() > 1 && Character.isLowerCase(family.charAt(0))){
 					havePerson = false;
 				}
 				if (havePerson) {
@@ -81,6 +86,7 @@ public class PersonExtractor {
 		if (ret.contains("@")) {
 			ret = "";
 		}
+		ret = ret.trim();
 		return ret;
 	}
 	// ************************************************************************

@@ -6,6 +6,6 @@ public class Limits {
 	public final static Integer START_IN_SEARCHFOR  = 1;
 	public final static Integer STOP_IN_SEARCHFOR  = 2;
 	public final static Integer START_IN_GR  = 1;
-	public final static Integer STOP_IN_GR  = 3;
+	public final static Integer STOP_IN_GR  = 40;
 
 }

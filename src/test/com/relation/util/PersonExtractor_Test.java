@@ -1,4 +1,4 @@
-package com.relation.util;
+package test.com.relation.util;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,8 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.relation.models.Person;
+import com.relation.util.Persistance;
+import com.relation.util.PersonExtractor;
 
 public class PersonExtractor_Test {
 
@@ -26,17 +28,17 @@ public class PersonExtractor_Test {
 	@Test
 	public void testBeautify() {
 		PersonExtractor pex = new PersonExtractor();
-		String textline = "HolgerReinecke/Peter Müller";
+		String textline = "HolgerReinecke/Peter Mueller";
 		String newtextline = pex.beautifyLine(textline);
-		assertTrue("Holger Reinecke Peter Müller".equalsIgnoreCase( newtextline));
+		assertTrue("Holger Reinecke Peter Mueller".equalsIgnoreCase( newtextline));
 	}
 	
 	@Test
 	public void testBeautify_NumberinText() {
 		PersonExtractor pex = new PersonExtractor();
-		String textline = "HolgerReinecke1/Peter Müller";
+		String textline = "HolgerReinecke1/Peter Mueller";
 		String newtextline = pex.beautifyLine(textline);
-		assertTrue("Holger Reinecke 1 Peter Müller".equalsIgnoreCase( newtextline));
+		assertTrue("Holger Reinecke 1 Peter Mueller".equalsIgnoreCase( newtextline));
 	}
 
 }

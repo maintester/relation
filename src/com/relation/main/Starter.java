@@ -39,9 +39,9 @@ public class Starter {
 		
 		
 
-	 new Step2().doStep();
+ new Step2().doStep();
 		//	new Step3().doStep();
-	//	new Step4().doStep();
+	 //new Step4().doStep();
 
 		// new Step5_DatatoDB().doStep();
 

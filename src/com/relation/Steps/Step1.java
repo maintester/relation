@@ -66,11 +66,10 @@ public class Step1 implements IStep {
 		}
 		return result;
 	}
-
 	// *************************************************************************
 	@Override
 	public void setParams(String paramName, String paramValue) {
 		params.put(paramName, paramValue);
-
 	}
+	// *************************************************************************
 }

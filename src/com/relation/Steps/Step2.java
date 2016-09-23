@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import com.relation.interfaces.IPersistance;
+import com.relation.interfaces.ISpider;
 import com.relation.models.GoogleResults;
 import com.relation.models.Person;
 import com.relation.models.Sites;
@@ -32,23 +34,20 @@ public class Step2 implements IStep {
 	// ************************************************************************
 	@Override
 	public void doStep() {
-		// Open the file
-		// FindPerson find = new FindPerson();
-		Set<String> doNotUrl = new HashSet<String>();
-		doNotUrl = new Persistance().readTextFile("donotcrawlurls.txt");
+		Set<String> doNotCralwUrl = new HashSet<String>();
+		doNotCralwUrl = new Persistance().readTextFile("donotcrawlurls.txt");
 		Set<String> grLines = new LinkedHashSet<String>();
 		grLines = new Persistance().readResultFile("gr.txt");
-		Persistance per = new Persistance();
-		// Set<String> urlLines = new HashSet<String>();
+		IPersistance per = new Persistance();
 		MySpider spider = new MySpider();
 		spider.init(per);
-		doSpider(spider, grLines, doNotUrl);
-		// System.out.println("urllinessize: " + urlLines.size());
+		doSpider( per ,spider, grLines, doNotCralwUrl);
 
 	}
 
+	 
 	// ************************************************************************
-	private void doSpider(MySpider spider, Set<String> grLines, Set<String> doNotUrl) {
+	public void doSpider( IPersistance per ,ISpider spider, Set<String> grLines, Set<String> doNotCrawlUrl) {
 		Set<String> urlLines = new HashSet<String>();
 		Set<String> urlContent = new HashSet<String>();
 		int current = 0;
@@ -57,43 +56,41 @@ public class Step2 implements IStep {
 		for (String strLine : grLines) {
 			current++;
 			String[] sa = strLine.split("\\" + FileUtils.getItemDelim());
+			//System.out.println("strLine:"+strLine);
 			String searchValue = sa[1];
 			String site = sa[0];
 			if (current < start | current >= stop) {
 				continue;
 			}
-			if (isStringInSet(doNotUrl, site)) {
-				System.out.println("do not crawl " + site);
+			if (isStringInSet(doNotCrawlUrl, site)) {
+				//System.out.println("do not crawl " + site);
 			} else {
 				System.out.println("crawling " + site);
 
 				spider.clear();
 				spider.searchSite(site);
 				// System.out.println("HTML DOCS ");
-				for (String hashUrl : spider.htmlDocuments.keySet()) {
-					// System.out.println("key: " + hashUrl + " " +
-					// spider.htmlDocuments.get(hashUrl));
-					String stext = spider.htmlDocuments.get(hashUrl);
-					stext = stext.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\\|", "").replaceAll("'", "");
+				for (String hashUrl : spider.getHtmlDocuments().keySet()) {
+					String stext = spider.getHtmlDocuments().get(hashUrl);
+					stext = stext.replaceAll("\n", " ").replaceAll("\r", " ").replaceAll("\\|", " ").replaceAll("'", " ").replaceAll("/"," ");
 					urlContent.add("" + FileUtils.getTStamp() + FileUtils.getItemDelim() + hashUrl + FileUtils.getItemDelim() + stext
 							+ FileUtils.getLineDelim());
 				}
-				new Persistance().writeResultFile("urlcontent.txt", urlContent);
+				per.writeResultFile("urlcontent.txt", urlContent);
 				urlContent = new HashSet<String>();
 				String out = "";
-				for (String sUrlValue : spider.urlsMap.keySet()) {
+				for (String sUrlValue : spider.getUrlsMap().keySet()) {
 					out = "" + FileUtils.getTStamp() + FileUtils.getItemDelim() + sUrlValue + FileUtils.getItemDelim()
-							+ spider.urlsMap.get(sUrlValue) + FileUtils.getItemDelim() + searchValue + FileUtils.getLineDelim();
+							+ spider.getUrlsMap().get(sUrlValue) + FileUtils.getItemDelim() + searchValue + FileUtils.getLineDelim();
 					urlLines.add(out);
 				}
-				new Persistance().writeResultFile("urls.txt", urlLines);
+				per.writeResultFile("urls.txt", urlLines);
 				urlLines = new HashSet<String>();
 
 			}
 		}
 		return;
 	}
-
 	// ************************************************************************
 	private boolean isStringInSet(Set<String> stringSet, String value) {
 		boolean bRet = false;
@@ -104,7 +101,6 @@ public class Step2 implements IStep {
 		}
 		return bRet;
 	}
-
 	// ************************************************************************
 	@Override
 	public void setParams(String paramName, String paramValue) {

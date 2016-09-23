@@ -36,25 +36,31 @@ public class Step4 implements IStep {
 	@Override
 	public void doStep() {
 		if (readLines()) {
-			
+
 			StringBuffer out = new StringBuffer();
-			for (Person p :allPersons){
+			for (Person p : allPersons) {
 				out = new StringBuffer();
-				out.append(""+FileUtils.getTStamp() + FileUtils.getItemDelim());
-				out.append( p.personId  + FileUtils.getItemDelim() + p.firstName +FileUtils.getItemDelim() + p.midName + FileUtils.getItemDelim() + p.lastName );
+				out.append("" + FileUtils.getTStamp() + FileUtils.getItemDelim());
+				out.append(p.personId + FileUtils.getItemDelim() + p.firstName + FileUtils.getItemDelim() + p.midName
+						+ FileUtils.getItemDelim() + p.lastName);
 				out.append(FileUtils.getLineDelim());
 				persons.add(out.toString());
-				//Files.write(Paths.get(FileUtils.getPathTextFiles()+"persons.txt"), out.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+				// Files.write(Paths.get(FileUtils.getPathTextFiles()+"persons.txt"),
+				// out.getBytes(), StandardOpenOption.CREATE,
+				// StandardOpenOption.APPEND);
 			}
-			for (Relation r :allRels){
+			for (Relation r : allRels) {
 				out = new StringBuffer();
-				out.append(FileUtils.getTStamp() + FileUtils.getItemDelim() );
-				out.append(r.locationId  + FileUtils.getItemDelim() + r.personId);
+				out.append(FileUtils.getTStamp() + FileUtils.getItemDelim());
+				out.append(r.locationId + FileUtils.getItemDelim() + r.personId);
 				out.append(FileUtils.getLineDelim());
 				relations.add(out.toString());
-				//s= r.locationId  + FileUtils.getItemDelim() + r.personId;
-				//out = ""+FileUtils.getTStamp() + FileUtils.getItemDelim() +  s + FileUtils.getLineDelim();
-				//Files.write(Paths.get(FileUtils.getPathTextFiles()+"relations.txt"), out.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+				// s= r.locationId + FileUtils.getItemDelim() + r.personId;
+				// out = ""+FileUtils.getTStamp() + FileUtils.getItemDelim() + s
+				// + FileUtils.getLineDelim();
+				// Files.write(Paths.get(FileUtils.getPathTextFiles()+"relations.txt"),
+				// out.getBytes(), StandardOpenOption.CREATE,
+				// StandardOpenOption.APPEND);
 			}
 			System.out.println("Persons" + persons.size());
 			new Persistance().writeResultFile("persons.txt", persons);
@@ -88,6 +94,9 @@ public class Step4 implements IStep {
 	// ************************************************************************
 	private void processLine(String line) {
 		String[] sarrContentLine = line.split("\\" + FileUtils.getItemDelim());
+		if (sarrContentLine.length < 3) {
+			return;
+		}
 		String sContent = sarrContentLine[2];
 		String urlId = sarrContentLine[1];
 		System.out.println(sContent);
@@ -97,7 +106,7 @@ public class Step4 implements IStep {
 			rels.add(new Relation(p.personId, urlId));
 		}
 		System.out.println(line);
-		System.out.println("Personsize "+pers.size());
+		System.out.println("Personsize " + pers.size());
 		allPersons.addAll(pers);
 		allRels.addAll(rels);
 	}

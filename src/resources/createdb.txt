@@ -29,9 +29,9 @@ create table wp_relation2u_relation(
 create table wp_relation2u_url(
 	urlid varchar(40) NOT NULL, 
 	url varchar(200) NOT NULL,
-	searchval varchar(200),
+	town varchar(40),
+	activity varchar(40),
 	primary key (urlid)
-);
 
 create table dbversion( version int);
 
