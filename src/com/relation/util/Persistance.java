@@ -94,7 +94,27 @@ public class Persistance implements IPersistance{
 		}
 		return true;
 	}
+	// ************************************************************************
+		@Override
+		public boolean writeNameFile(String filename, Set<String> values) {
+			try {
+				Files.deleteIfExists(Paths.get(FileUtils.getPathNameFiles() + filename));
+			} catch (IOException e1) {
+				//e1.printStackTrace();
+			}
+			for (String s : values) {
+				try {
+					Files.write(Paths.get(FileUtils.getPathNameFiles() + filename), s.getBytes(), StandardOpenOption.CREATE,
+							StandardOpenOption.APPEND);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				}
 
+			}
+			return true;
+		}
 	// ************************************************************************
 	@Override
 	public Set<String> readTextFile(String filename) {
@@ -137,6 +157,8 @@ public class Persistance implements IPersistance{
 
 		return values;
 	}
+	// ************************************************************************
+	 
 
 	// ********************************************************++**************
 	public String read(String filename) {

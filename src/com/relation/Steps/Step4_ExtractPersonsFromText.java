@@ -23,11 +23,11 @@ import com.relation.util.IStep;
 import com.relation.util.Persistance;
 import com.relation.util.PersonExtractor;
 
-public class Step4 implements IStep {
+public class Step4_ExtractPersonsFromText implements IStep {
 
 	ArrayList<Person> allPersons = new ArrayList<Person>();
-	ArrayList<Relation> allRels = new ArrayList<Relation>();
-	Set<String> names = new Persistance().readNameFile("firstname_unique.txt");
+	ArrayList<Relation> allRelations = new ArrayList<Relation>();
+	Set<String> uniqueFirstnames = new Persistance().readNameFile("firstname_unique.txt");
 	PersonExtractor pext = new PersonExtractor();
 	Set<String> persons = new HashSet<String>();
 	Set<String> relations = new HashSet<String>();
@@ -38,21 +38,21 @@ public class Step4 implements IStep {
 		if (readLines()) {
 
 			StringBuffer out = new StringBuffer();
-			for (Person p : allPersons) {
+			for (Person onePerson : allPersons) {
 				out = new StringBuffer();
 				out.append("" + FileUtils.getTStamp() + FileUtils.getItemDelim());
-				out.append(p.personId + FileUtils.getItemDelim() + p.firstName + FileUtils.getItemDelim() + p.midName
-						+ FileUtils.getItemDelim() + p.lastName);
+				out.append(onePerson.personId + FileUtils.getItemDelim() + onePerson.firstName + FileUtils.getItemDelim() + onePerson.midName
+						+ FileUtils.getItemDelim() + onePerson.lastName);
 				out.append(FileUtils.getLineDelim());
 				persons.add(out.toString());
 				// Files.write(Paths.get(FileUtils.getPathTextFiles()+"persons.txt"),
 				// out.getBytes(), StandardOpenOption.CREATE,
 				// StandardOpenOption.APPEND);
 			}
-			for (Relation r : allRels) {
+			for (Relation oneRelation : allRelations) {
 				out = new StringBuffer();
 				out.append(FileUtils.getTStamp() + FileUtils.getItemDelim());
-				out.append(r.locationId + FileUtils.getItemDelim() + r.personId);
+				out.append(oneRelation.locationId + FileUtils.getItemDelim() + oneRelation.personId);
 				out.append(FileUtils.getLineDelim());
 				relations.add(out.toString());
 				// s= r.locationId + FileUtils.getItemDelim() + r.personId;
@@ -100,7 +100,7 @@ public class Step4 implements IStep {
 		String sContent = sarrContentLine[2];
 		String urlId = sarrContentLine[1];
 		System.out.println(sContent);
-		ArrayList<Person> pers = pext.getPersons(names, sContent);
+		ArrayList<Person> pers = pext.getPersons(uniqueFirstnames, sContent);
 		ArrayList<Relation> rels = new ArrayList<Relation>();
 		for (Person p : pers) {
 			rels.add(new Relation(p.personId, urlId));
@@ -108,13 +108,13 @@ public class Step4 implements IStep {
 		System.out.println(line);
 		System.out.println("Personsize " + pers.size());
 		allPersons.addAll(pers);
-		allRels.addAll(rels);
+		allRelations.addAll(rels);
 	}
 
 	// ************************************************************************
 	@Override
 	public void setParams(String paramName, String paramValue) {
 		// TODO Auto-generated method stub
-
 	}
+	// ************************************************************************
 }

@@ -98,7 +98,7 @@ public class MySpider implements ISpider {
 	@Override
 	public void searchSite(String baseurl) {
 		pagesToVisit.add(baseurl);
-		pagesVisited.add(baseurl);
+		//pagesVisited.add(baseurl);
 		while (pagesToVisit.size() > 0) {
 			if (pagesToVisit.get(0).contains(baseurl)) {
 				System.out.println("call searchurl " + pagesToVisit.get(0));
@@ -108,7 +108,7 @@ public class MySpider implements ISpider {
 			pagesToVisit.remove(0);
 			System.out.println("size " + pagesToVisit.size());
 		}
-
+		
 	}
 
 	// ************************************************************************
@@ -134,6 +134,8 @@ public class MySpider implements ISpider {
 	public void searchOneUrl(String baseUrl, String url) {
 
 		String urlHash = Persistance.generateMD5(url);
+ 
+ 
 		if (fetchedUrls.contains(urlHash)) {
 			System.out.println("Duplicate " + url);
 			return;

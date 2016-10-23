@@ -15,12 +15,12 @@ import com.relation.util.IStep;
 import com.relation.util.Limits;
 import com.relation.util.Persistance;
 
-public class Step1 implements IStep {
+public class Step1_AskGoogle implements IStep {
 
 	private HashMap<String, String> params = new HashMap<String, String>();
 
 	private Set<String> searchs = new HashSet<String>();
-	private final static Logger logger  = Logger.getLogger(Step1.class.getName());  
+	private final static Logger logger  = Logger.getLogger(Step1_AskGoogle.class.getName());  
 
 	// *************************************************************************
 	@Override
